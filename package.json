@@ -16,7 +16,7 @@
     "node.js",
     "express"
   ],
-  "author": "Votre Nom",
+  "author": "Durand",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.6.0",
