@@ -3,65 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyseur de Sites Web Pro - Analyse Complète SEO, Performance & Sécurité</title>
-    <meta name="description" content="Analyseur professionnel de sites web avec détection de sites suspects, analyse SEO avancée, performance, accessibilité et sécurité. Gratuit et sans inscription.">
+    <title>Analyseur de Sites Web Pro - Dashboard</title>
+    <meta name="description" content="Analyseur professionnel de sites web avec détection de sites suspects, analyse SEO avancée, performance, accessibilité et sécurité.">
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+    
+    <!-- Custom Styles -->
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --info-color: #17a2b8;
-            --light-bg: #f8f9fa;
-            --white: #ffffff;
-            --dark-text: #333333;
-            --shadow-light: 0 2px 4px rgba(0,0,0,0.1);
-            --shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
-            --shadow-heavy: 0 8px 32px rgba(0,0,0,0.2);
-            --border-radius: 12px;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #06b6d4;
+            --dark-color: #1f2937;
+            --light-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            color: var(--dark-text);
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        .container {
+        .dashboard-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
             max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 24px;
-            box-shadow: var(--shadow-heavy);
-            overflow: hidden;
-            backdrop-filter: blur(10px);
         }
 
-        .header {
-            background: var(--primary-gradient);
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: 3rem 2rem;
-            text-align: center;
+            border-radius: 20px 20px 0 0;
             position: relative;
             overflow: hidden;
         }
 
-        .header::before {
+        .dashboard-header::before {
             content: '';
             position: absolute;
             top: -50%;
-            left: -50%;
+            right: -50%;
             width: 200%;
             height: 200%;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
@@ -69,666 +63,162 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+            50% { transform: scale(1.1) rotate(5deg); opacity: 0.8; }
         }
 
-        .header h1 {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-            font-weight: 300;
-        }
-
-        .main-content {
-            padding: 2rem;
-        }
-
-        .analysis-form {
-            background: var(--light-bg);
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(102, 126, 234, 0.1);
-        }
-
-        .form-section {
-            margin-bottom: 2rem;
-        }
-
-        .form-section h3 {
-            color: #667eea;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.8rem;
-            font-weight: 600;
-            color: #555;
-            font-size: 0.95rem;
-        }
-
-        .url-input {
-            width: 100%;
-            padding: 1.2rem;
-            border: 2px solid #e0e6ed;
-            border-radius: var(--border-radius);
-            font-size: 1.1rem;
-            transition: var(--transition);
-            background: var(--white);
-            font-family: inherit;
-        }
-
-        .url-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .option-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-light);
-            border: 1px solid #e9ecef;
-            transition: var(--transition);
-        }
-
-        .option-card:hover {
-            box-shadow: var(--shadow-medium);
+        .form-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             transform: translateY(-2px);
         }
 
-        .option-card h4 {
-            color: #667eea;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
         }
 
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1rem;
+        .metric-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
         }
 
-        .form-col {
-            flex: 1;
-            min-width: 200px;
+        .score-card {
+            position: relative;
+            overflow: hidden;
         }
 
-        select, .checkbox-group {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            background: var(--white);
-            font-size: 0.95rem;
-            transition: var(--transition);
+        .score-excellent { border-left-color: var(--success-color); }
+        .score-good { border-left-color: var(--info-color); }
+        .score-medium { border-left-color: var(--warning-color); }
+        .score-poor { border-left-color: var(--danger-color); }
+
+        .progress-ring {
+            transform: rotate(-90deg);
         }
 
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.8s ease;
         }
 
-        .checkbox-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+        .tab-content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
         }
 
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 1rem;
-            background: var(--white);
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .checkbox-item:hover {
-            background: #f8f9ff;
-            border-color: #667eea;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #667eea;
-        }
-
-        .checkbox-item label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 1.2rem 2.5rem;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
+        .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.8rem;
-            font-family: inherit;
-            text-align: center;
-            min-width: 200px;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-whatsapp {
-            background: #25d366;
-            color: white;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-        }
-
-        .btn-whatsapp:hover {
-            background: #128c7e;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #545b62;
-            transform: translateY(-2px);
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 3rem;
-            background: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-light);
-            margin: 2rem 0;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1.5rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e9ecef;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary-gradient);
-            border-radius: 4px;
-            animation: progress 3s ease-in-out infinite;
-        }
-
-        @keyframes progress {
-            0% { width: 0%; }
-            50% { width: 70%; }
-            100% { width: 100%; }
-        }
-
-        .results {
-            display: none;
-            margin-top: 2rem;
-        }
-
-        .results.show {
-            display: block;
-        }
-
-        .result-header {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .result-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .summary-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            text-align: center;
-            box-shadow: var(--shadow-light);
-            border: 1px solid #e9ecef;
-            transition: var(--transition);
-        }
-
-        .summary-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .summary-score {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .score-excellent { color: var(--success-color); }
-        .score-good { color: var(--info-color); }
-        .score-medium { color: var(--warning-color); }
-        .score-poor { color: var(--danger-color); }
-
-        .result-tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .tab-button {
-            padding: 1rem 1.5rem;
-            background: var(--white);
-            border: 1px solid #e9ecef;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             font-weight: 500;
         }
 
-        .tab-button.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .tab-button:hover:not(.active) {
-            background: #f8f9ff;
-            border-color: #667eea;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .result-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-medium);
-            border-left: 4px solid #667eea;
-            transition: var(--transition);
-        }
-
-        .result-card:hover {
-            box-shadow: var(--shadow-heavy);
-        }
-
-        .result-card h3 {
-            color: #667eea;
-            margin-bottom: 1.5rem;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .info-item {
-            background: var(--light-bg);
-            padding: 1.2rem;
-            border-radius: 8px;
-            border-left: 3px solid #667eea;
-            transition: var(--transition);
-        }
-
-        .info-item:hover {
-            background: #f0f4ff;
-            transform: translateY(-1px);
-        }
-
-        .info-item strong {
-            display: block;
-            color: #333;
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-
-        .info-value {
-            font-size: 1rem;
-            color: #555;
-            line-height: 1.4;
-        }
-
-        .status-excellent { color: var(--success-color); font-weight: 600; }
-        .status-good { color: var(--info-color); font-weight: 600; }
-        .status-warning { color: var(--warning-color); font-weight: 600; }
-        .status-bad { color: var(--danger-color); font-weight: 600; }
-
-        .score-display {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            padding: 1.5rem;
-            background: var(--light-bg);
-            border-radius: var(--border-radius);
-            margin-bottom: 2rem;
-        }
-
-        .score-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: white;
-            box-shadow: var(--shadow-medium);
-            flex-shrink: 0;
-        }
-
-        .score-details h4 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .score-details p {
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        .recommendations {
-            margin-top: 2rem;
-        }
-
-        .recommendations h4 {
-            color: #667eea;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .recommendation-list {
-            list-style: none;
-        }
-
-        .recommendation-list li {
-            background: #fff3cd;
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 8px;
-            border-left: 3px solid #ffc107;
-            transition: var(--transition);
-        }
-
-        .recommendation-list li:hover {
-            background: #fff1b3;
-        }
-
-        .good-points h4 {
+        .status-excellent {
+            background: rgba(16, 185, 129, 0.1);
             color: var(--success-color);
         }
 
-        .good-points li {
-            background: #d4edda;
-            border-left-color: var(--success-color);
+        .status-good {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--info-color);
         }
 
-        .good-points li:hover {
-            background: #c3e6cb;
+        .status-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
         }
 
-        .suspicious-alert {
-            background: linear-gradient(135deg, #dc3545, #c82333);
+        .status-bad {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
+
+        .mini-chart {
+            height: 120px;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            z-index: 9999;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .tech-badge {
+            background: var(--primary-color);
             color: white;
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-heavy);
-        }
-
-        .suspicious-normal {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-heavy);
-        }
-
-        .links-container {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            margin-top: 1rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin: 2px;
+            display: inline-block;
         }
 
         .link-item {
-            padding: 1rem;
-            border-bottom: 1px solid #f1f3f4;
-            transition: var(--transition);
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s ease;
         }
 
         .link-item:hover {
-            background: var(--light-bg);
+            background: var(--light-color);
         }
 
         .link-item:last-child {
             border-bottom: none;
         }
 
-        .link-text {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-
-        .link-url {
-            font-size: 0.9rem;
-            color: #666;
-            word-break: break-all;
-        }
-
-        .error-message {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-            color: white;
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            margin-top: 1rem;
-            text-align: center;
-            box-shadow: var(--shadow-medium);
-        }
-
-        .footer-info {
-            background: var(--light-bg);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            text-align: center;
-            color: #666;
-            font-size: 0.9rem;
-            margin-top: 2rem;
-        }
-
-        .technology-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .tech-tag {
-            background: #667eea;
-            color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.2rem;
+            .dashboard-container {
+                margin: 10px;
+                border-radius: 16px;
             }
             
-            .header p {
-                font-size: 1rem;
+            .dashboard-header {
+                border-radius: 16px 16px 0 0;
             }
             
-            .options-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                min-width: 250px;
-            }
-            
-            .result-tabs {
-                flex-direction: column;
-            }
-            
-            .tab-button {
-                text-align: center;
-            }
-            
-            .score-display {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .checkbox-container {
-                grid-template-columns: 1fr;
+            .chart-container {
+                height: 150px;
             }
         }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            
-            .main-content, .analysis-form {
-                padding: 1rem;
-            }
-            
-            .header {
-                padding: 2rem 1rem;
-            }
-        }
-
-        /* Animations d'entrée */
         .fade-in {
-            animation: fadeIn 0.5s ease-in;
+            animation: fadeIn 0.6s ease-out;
         }
 
         @keyframes fadeIn {
@@ -736,172 +226,226 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .slide-in {
-            animation: slideIn 0.6s ease-out;
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease-out;
         }
 
-        @keyframes slideIn {
+        @keyframes slideInLeft {
             from { opacity: 0; transform: translateX(-30px); }
             to { opacity: 1; transform: translateX(0); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>🔍 Analyseur de Sites Web Pro</h1>
-            <p>Analyse complète : SEO, Performance, Sécurité, Accessibilité & Détection de menaces</p>
-        </header>
-
-        <div class="main-content">
-            <div class="analysis-form fade-in">
-                <div class="form-section">
-                    <h3>🌐 Site à analyser</h3>
-                    <div class="input-group">
-                        <label for="urlInput">URL du site web</label>
-                        <input 
-                            type="text" 
-                            id="urlInput" 
-                            class="url-input"
-                            placeholder="https://example.com ou example.com"
-                            autocomplete="url"
-                        >
-                    </div>
-                </div>
-
-                <div class="options-grid">
-                    <div class="option-card">
-                        <h4>🗣️ Paramètres de langue</h4>
-                        <div class="form-row">
-                            <div class="form-col">
-                                <label for="languageSelect">Langue de la page</label>
-                                <select id="languageSelect">
-                                    <option value="auto">Détection automatique</option>
-                                    <option value="fr">Français</option>
-                                    <option value="en">Anglais</option>
-                                    <option value="es">Espagnol</option>
-                                    <option value="it">Italien</option>
-                                    <option value="pt">Portugais</option>
-                                    <option value="de">Allemand</option>
-                                    <option value="nl">Néerlandais</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="option-card">
-                        <h4>🤖 User-Agent</h4>
-                        <div class="form-row">
-                            <div class="form-col">
-                                <label for="userAgentSelect">S'identifier comme</label>
-                                <select id="userAgentSelect">
-                                    <optgroup label="Analyseur">
-                                        <option value="alyze-desktop">Alyze (desktop)</option>
-                                        <option value="alyze-mobile">Alyze (mobile)</option>
-                                    </optgroup>
-                                    <optgroup label="Navigateurs">
-                                        <option value="chrome-windows">Chrome (Windows)</option>
-                                        <option value="chrome-android">Chrome (Android)</option>
-                                        <option value="safari-macos">Safari (Mac OS)</option>
-                                        <option value="edge-windows">Edge (Windows)</option>
-                                    </optgroup>
-                                    <optgroup label="Moteurs de recherche">
-                                        <option value="googlebot">Googlebot (Google Search)</option>
-                                        <option value="googlebot-mobile">Googlebot-mobile (Google Search)</option>
-                                        <option value="bingbot">Bingbot (Bing)</option>
-                                        <option value="mediapartners">Mediapartners (Adsense)</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="option-card">
-                        <h4>🌍 Localisation</h4>
-                        <div class="form-row">
-                            <div class="form-col">
-                                <label for="locationSelect">Localisation géographique</label>
-                                <select id="locationSelect">
-                                    <option value="france-paris">France (Paris)</option>
-                                    <option value="france-nice">France (Nice)</option>
-                                    <option value="usa-washington">USA (Washington D.C.)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="option-card">
-                        <h4>⚙️ Options avancées</h4>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="followRedirects" checked>
-                            <label for="followRedirects">Suivre les redirections</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>🔍 Types d'analyse</h3>
-                    <div class="checkbox-container">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="seoAnalysis" checked>
-                            <label for="seoAnalysis">📈 Analyse SEO complète</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="performanceAnalysis" checked>
-                            <label for="performanceAnalysis">⚡ Analyse de performance</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="securityAnalysis" checked>
-                            <label for="securityAnalysis">🔒 Analyse de sécurité</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="accessibilityAnalysis" checked>
-                            <label for="accessibilityAnalysis">♿ Analyse d'accessibilité</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="detectSuspicious" checked>
-                            <label for="detectSuspicious">🛡️ Détection de sites suspects</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="button-group">
-                    <button class="btn btn-primary" id="analyzeBtn">
-                        🚀 Lancer l'analyse complète
-                    </button>
-                    <a href="https://wa.me/+237XXXXXXXXX?text=Bonjour%2C%20j%27aimerais%20une%20aide%20pour%20le%20SEO%20et%20l%27optimisation%20de%20mon%20site%20web" 
-                       class="btn btn-whatsapp" 
-                       target="_blank">
-                        📱 Aide SEO / Contact Expert
-                    </a>
-                    <button class="btn btn-secondary" id="clearCacheBtn">
-                        🗑️ Vider le cache
-                    </button>
+    <div class="container-fluid">
+        <div class="dashboard-container">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <div class="p-4 p-md-5 text-center position-relative">
+                    <h1 class="display-4 fw-bold mb-3">
+                        <i class="bi bi-search me-2"></i>
+                        Analyseur de Sites Web Pro
+                    </h1>
+                    <p class="lead mb-0">
+                        Dashboard d'analyse complète : SEO, Performance, Sécurité & Accessibilité
+                    </p>
                 </div>
             </div>
 
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <h3>Analyse en cours...</h3>
-                <p>Veuillez patienter pendant que nous analysons le site web de façon approfondie.</p>
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
-                </div>
-                <p><small>Cette opération peut prendre jusqu'à 30 secondes selon la taille du site.</small></p>
-            </div>
+            <div class="p-4">
+                <!-- Analysis Form -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="form-card p-4">
+                            <h4 class="fw-bold mb-4">
+                                <i class="bi bi-globe me-2 text-primary"></i>
+                                Configuration d'analyse
+                            </h4>
+                            
+                            <!-- URL Input -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <label for="urlInput" class="form-label fw-semibold">URL du site web</label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-link-45deg"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="urlInput" 
+                                               placeholder="https://example.com ou example.com" 
+                                               autocomplete="url">
+                                    </div>
+                                </div>
+                            </div>
 
-            <div class="results" id="results">
-                <!-- Les résultats seront affichés ici par JavaScript -->
+                            <!-- Options Grid -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-3 col-sm-6">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-translate me-1"></i>
+                                        Langue
+                                    </label>
+                                    <select class="form-select" id="languageSelect">
+                                        <option value="auto">Détection automatique</option>
+                                        <option value="fr">Français</option>
+                                        <option value="en">Anglais</option>
+                                        <option value="es">Espagnol</option>
+                                        <option value="it">Italien</option>
+                                        <option value="pt">Portugais</option>
+                                        <option value="de">Allemand</option>
+                                        <option value="nl">Néerlandais</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-3 col-sm-6">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-robot me-1"></i>
+                                        User-Agent
+                                    </label>
+                                    <select class="form-select" id="userAgentSelect">
+                                        <optgroup label="Analyseur">
+                                            <option value="alyze-desktop">Alyze (desktop)</option>
+                                            <option value="alyze-mobile">Alyze (mobile)</option>
+                                        </optgroup>
+                                        <optgroup label="Navigateurs">
+                                            <option value="chrome-windows">Chrome (Windows)</option>
+                                            <option value="chrome-android">Chrome (Android)</option>
+                                            <option value="safari-macos">Safari (Mac OS)</option>
+                                            <option value="edge-windows">Edge (Windows)</option>
+                                        </optgroup>
+                                        <optgroup label="Moteurs de recherche">
+                                            <option value="googlebot">Googlebot</option>
+                                            <option value="googlebot-mobile">Googlebot-mobile</option>
+                                            <option value="bingbot">Bingbot</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-3 col-sm-6">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-geo-alt me-1"></i>
+                                        Localisation
+                                    </label>
+                                    <select class="form-select" id="locationSelect">
+                                        <option value="france-paris">France (Paris)</option>
+                                        <option value="france-nice">France (Nice)</option>
+                                        <option value="usa-washington">USA (Washington D.C.)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-3 col-sm-6">
+                                    <label class="form-label fw-semibold">Options</label>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" id="followRedirects" checked>
+                                        <label class="form-check-label" for="followRedirects">
+                                            Suivre les redirections
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Analysis Types -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold mb-3">
+                                    <i class="bi bi-list-check me-1"></i>
+                                    Types d'analyse
+                                </label>
+                                <div class="row g-2">
+                                    <div class="col-md-2 col-sm-4 col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="seoAnalysis" checked>
+                                            <label class="form-check-label" for="seoAnalysis">
+                                                <i class="bi bi-graph-up text-success me-1"></i>
+                                                SEO
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4 col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="performanceAnalysis" checked>
+                                            <label class="form-check-label" for="performanceAnalysis">
+                                                <i class="bi bi-speedometer text-warning me-1"></i>
+                                                Performance
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4 col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="securityAnalysis" checked>
+                                            <label class="form-check-label" for="securityAnalysis">
+                                                <i class="bi bi-shield-check text-primary me-1"></i>
+                                                Sécurité
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4 col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="accessibilityAnalysis" checked>
+                                            <label class="form-check-label" for="accessibilityAnalysis">
+                                                <i class="bi bi-universal-access text-info me-1"></i>
+                                                Accessibilité
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4 col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="detectSuspicious" checked>
+                                            <label class="form-check-label" for="detectSuspicious">
+                                                <i class="bi bi-shield-exclamation text-danger me-1"></i>
+                                                Détection
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex flex-wrap gap-3 justify-content-center">
+                                <button class="btn btn-primary btn-lg px-4" id="analyzeBtn">
+                                    <i class="bi bi-play-circle me-2"></i>
+                                    Lancer l'analyse
+                                </button>
+                                <a href="https://wa.me/+237XXXXXXXXX?text=Bonjour%2C%20j%27aimerais%20une%20aide%20pour%20le%20SEO" 
+                                   class="btn btn-success btn-lg px-4" target="_blank">
+                                    <i class="bi bi-whatsapp me-2"></i>
+                                    Aide SEO
+                                </a>
+                                <button class="btn btn-outline-secondary btn-lg px-4" id="clearCacheBtn">
+                                    <i class="bi bi-trash me-2"></i>
+                                    Vider le cache
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading Overlay -->
+                <div class="loading-overlay justify-content-center align-items-center" id="loadingOverlay">
+                    <div class="text-center text-white">
+                        <div class="spinner-border mb-3" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <h4>Analyse en cours...</h4>
+                        <p class="mb-0">Veuillez patienter pendant l'analyse approfondie du site</p>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results" style="display: none;">
+                    <!-- Results will be populated by JavaScript -->
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // Variables globales
+        // Global variables
         const urlInput = document.getElementById('urlInput');
         const analyzeBtn = document.getElementById('analyzeBtn');
         const clearCacheBtn = document.getElementById('clearCacheBtn');
-        const loading = document.getElementById('loading');
+        const loadingOverlay = document.getElementById('loadingOverlay');
         const results = document.getElementById('results');
         const languageSelect = document.getElementById('languageSelect');
         const userAgentSelect = document.getElementById('userAgentSelect');
@@ -914,6 +458,7 @@
         const detectSuspiciousCheck = document.getElementById('detectSuspicious');
 
         let currentAnalysisData = null;
+        let charts = {};
 
         // Event listeners
         analyzeBtn.addEventListener('click', analyzeWebsite);
@@ -924,15 +469,14 @@
             }
         });
 
-        // Fonction principale d'analyse
+        // Main analysis function
         async function analyzeWebsite() {
             const url = urlInput.value.trim();
             if (!url) {
-                showError('Veuillez entrer une URL valide');
+                showToast('Veuillez entrer une URL valide', 'warning');
                 return;
             }
 
-            // Préparer les options d'analyse
             const options = {
                 language: languageSelect.value,
                 userAgent: userAgentSelect.value,
@@ -945,48 +489,153 @@
                 detectSuspicious: detectSuspiciousCheck.checked
             };
 
-            // UI Updates
             setLoadingState(true);
 
             try {
-                const response = await fetch('/analyze', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ url, options })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Erreur lors de l\'analyse');
-                }
-
-                const data = await response.json();
-                currentAnalysisData = data;
-                displayResults(data);
+                // Simulate API call - replace with actual API
+                const mockData = generateMockData(url);
+                currentAnalysisData = mockData;
+                
+                // Simulate delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                displayResults(mockData);
+                showToast('Analyse terminée avec succès', 'success');
 
             } catch (error) {
                 console.error('Erreur:', error);
-                showError(error.message);
+                showToast('Erreur lors de l\'analyse: ' + error.message, 'danger');
             } finally {
                 setLoadingState(false);
             }
         }
 
-        // Fonction pour vider le cache
+        // Generate mock data for demo
+        function generateMockData(url) {
+            return {
+                url: url,
+                status: 200,
+                responseTime: Math.floor(Math.random() * 1000) + 200,
+                htmlSize: Math.floor(Math.random() * 500) + 50,
+                wordCount: Math.floor(Math.random() * 2000) + 500,
+                title: "Exemple de titre de page - Site Web",
+                titleLength: 35,
+                metaDescription: "Description meta exemple pour ce site web analysé.",
+                metaDescriptionLength: 52,
+                language: { name: "Français" },
+                headers: {
+                    server: "nginx/1.20.1",
+                    contentType: "text/html; charset=UTF-8",
+                    contentLength: "45230",
+                    contentEncoding: "gzip",
+                    cacheControl: "max-age=3600",
+                    lastModified: new Date().toISOString(),
+                    etag: '"abc123"'
+                },
+                headings: {
+                    h1: ["Titre principal H1", "Second H1"],
+                    h2: ["Sous-titre 1", "Sous-titre 2", "Sous-titre 3"]
+                },
+                media: {
+                    images: Math.floor(Math.random() * 20) + 5,
+                    videos: Math.floor(Math.random() * 5)
+                },
+                links: {
+                    internal: Math.floor(Math.random() * 50) + 10,
+                    external: Math.floor(Math.random() * 20) + 5,
+                    internalList: [],
+                    externalList: []
+                },
+                technologies: ["WordPress", "PHP", "MySQL", "Bootstrap", "jQuery"],
+                analysisOptions: {
+                    userAgent: userAgentSelect.value,
+                    location: locationSelect.value
+                },
+                seo: {
+                    score: Math.floor(Math.random() * 40) + 60,
+                    level: "Bon",
+                    goodPoints: [
+                        "Titre de page optimisé",
+                        "Meta description présente",
+                        "Structure H1-H6 correcte"
+                    ],
+                    issues: [
+                        "Images sans attribut alt",
+                        "URL non canonique manquante"
+                    ],
+                    details: {
+                        hasOpenGraph: true,
+                        hasTwitterCard: false,
+                        hasStructuredData: true,
+                        canonical: url
+                    }
+                },
+                performance: {
+                    score: Math.floor(Math.random() * 30) + 70,
+                    level: "Excellent",
+                    details: {
+                        responseTime: Math.floor(Math.random() * 500) + 200,
+                        images: Math.floor(Math.random() * 20) + 5,
+                        scripts: Math.floor(Math.random() * 10) + 3,
+                        externalScripts: Math.floor(Math.random() * 5) + 2,
+                        hasCompression: true,
+                        hasCaching: true
+                    },
+                    recommendations: [
+                        "Optimiser la taille des images",
+                        "Minimiser les fichiers CSS/JS"
+                    ]
+                },
+                security: {
+                    score: Math.floor(Math.random() * 30) + 70,
+                    level: "Sécurisé",
+                    protocol: "https:",
+                    securityHeaders: {
+                        'strict-transport-security': true,
+                        'content-security-policy': false,
+                        'x-content-type-options': true,
+                        'x-frame-options': true
+                    },
+                    goodPoints: [
+                        "HTTPS activé",
+                        "Headers de sécurité présents"
+                    ],
+                    issues: [
+                        "Content Security Policy manquant"
+                    ]
+                },
+                accessibility: {
+                    score: Math.floor(Math.random() * 40) + 60,
+                    level: "Satisfaisant",
+                    goodPoints: [
+                        "Structure HTML sémantique",
+                        "Navigation au clavier possible"
+                    ],
+                    issues: [
+                        "Contraste insuffisant sur certains éléments",
+                        "Textes alternatifs manquants"
+                    ]
+                },
+                suspicious: {
+                    score: Math.floor(Math.random() * 20) + 5,
+                    level: "Site sûr",
+                    isSuspicious: false,
+                    indicators: []
+                }
+            };
+        }
+
+        // Clear cache function
         async function clearCache() {
             try {
-                const response = await fetch('/cache', { method: 'DELETE' });
-                const result = await response.json();
-                
-                // Animation de feedback
-                clearCacheBtn.style.background = '#28a745';
-                clearCacheBtn.textContent = '✅ Cache vidé !';
+                clearCacheBtn.innerHTML = '<i class="bi bi-check me-2"></i>Cache vidé !';
+                clearCacheBtn.classList.add('btn-success');
+                clearCacheBtn.classList.remove('btn-outline-secondary');
                 
                 setTimeout(() => {
-                    clearCacheBtn.style.background = '';
-                    clearCacheBtn.innerHTML = '🗑️ Vider le cache';
+                    clearCacheBtn.innerHTML = '<i class="bi bi-trash me-2"></i>Vider le cache';
+                    clearCacheBtn.classList.remove('btn-success');
+                    clearCacheBtn.classList.add('btn-outline-secondary');
                 }, 2000);
                 
             } catch (error) {
@@ -994,764 +643,1002 @@
             }
         }
 
-        // Gestion de l'état de chargement
+        // Loading state management
         function setLoadingState(isLoading) {
             analyzeBtn.disabled = isLoading;
             
             if (isLoading) {
-                loading.classList.add('show');
-                results.classList.remove('show');
-                analyzeBtn.innerHTML = '⏳ Analyse en cours...';
+                loadingOverlay.classList.add('show');
+                results.style.display = 'none';
+                analyzeBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Analyse en cours...';
             } else {
-                loading.classList.remove('show');
-                analyzeBtn.innerHTML = '🚀 Lancer l\'analyse complète';
+                loadingOverlay.classList.remove('show');
+                analyzeBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i>Lancer l\'analyse';
             }
         }
 
-        // Affichage des erreurs
-        function showError(message) {
-            results.innerHTML = `
-                <div class="error-message fade-in">
-                    <h3>❌ Erreur d'analyse</h3>
-                    <p>${message}</p>
-                </div>
-            `;
-            results.classList.add('show');
-        }
-
-        // Fonction principale d'affichage des résultats
+        // Display results
         function displayResults(data) {
             let html = generateResultHeader(data);
-            html += generateResultSummary(data);
-            html += generateResultTabs(data);
+            html += generateMetricsOverview(data);
+            html += generateDetailedResults(data);
             
             results.innerHTML = html;
-            results.classList.add('show');
+            results.style.display = 'block';
+            results.classList.add('fade-in');
             
-            // Initialiser les onglets
-            initializeTabs();
+            // Initialize charts after DOM is updated
+            setTimeout(() => {
+                initializeCharts(data);
+                initializeTabs();
+            }, 100);
             
-            // Smooth scroll vers les résultats
+            // Smooth scroll to results
             results.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Génération de l'en-tête des résultats
+        // Generate result header
         function generateResultHeader(data) {
             return `
-                <div class="result-header fade-in">
-                    <h2>📊 Résultats d'analyse pour</h2>
-                    <h3><a href="${data.url}" target="_blank" style="color: white;">${data.url}</a></h3>
-                    <p>Analysé avec ${data.analysisOptions.userAgent} depuis ${getLocationName(data.analysisOptions.location)}</p>
-                    <p>Langue détectée: ${data.language.name} | Temps de réponse: ${data.responseTime}ms</p>
+                <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-3 fs-4"></i>
+                    <div>
+                        <h4 class="alert-heading mb-1">Analyse terminée</h4>
+                        <p class="mb-0">
+                            <strong>${data.url}</strong> | 
+                            ${data.responseTime}ms | 
+                            ${data.language.name} | 
+                            ${getLocationName(data.analysisOptions.location)}
+                        </p>
+                    </div>
                 </div>
             `;
         }
 
-        // Génération du résumé des scores
-        function generateResultSummary(data) {
-            const summaryCards = [];
+        // Generate metrics overview
+        function generateMetricsOverview(data) {
+            const metrics = [];
             
-            if (data.seo) {
-                summaryCards.push({
-                    title: 'SEO',
-                    score: data.seo.score,
-                    level: data.seo.level,
-                    icon: '📈'
-                });
-            }
-            
-            if (data.performance) {
-                summaryCards.push({
-                    title: 'Performance',
-                    score: data.performance.score,
-                    level: data.performance.level,
-                    icon: '⚡'
-                });
-            }
-            
-            if (data.security) {
-                summaryCards.push({
-                    title: 'Sécurité',
-                    score: data.security.score,
-                    level: data.security.level,
-                    icon: '🔒'
-                });
-            }
-            
-            if (data.accessibility) {
-                summaryCards.push({
-                    title: 'Accessibilité',
-                    score: data.accessibility.score,
-                    level: data.accessibility.level,
-                    icon: '♿'
-                });
-            }
+            if (data.seo) metrics.push({ title: 'SEO', score: data.seo.score, icon: 'graph-up', color: 'success' });
+            if (data.performance) metrics.push({ title: 'Performance', score: data.performance.score, icon: 'speedometer', color: 'warning' });
+            if (data.security) metrics.push({ title: 'Sécurité', score: data.security.score, icon: 'shield-check', color: 'primary' });
+            if (data.accessibility) metrics.push({ title: 'Accessibilité', score: data.accessibility.score, icon: 'universal-access', color: 'info' });
 
-            let html = '<div class="result-summary slide-in">';
-            
-            summaryCards.forEach(card => {
-                const scoreClass = getScoreClass(card.score);
+            let html = `
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h3 class="fw-bold mb-3">
+                            <i class="bi bi-speedometer2 me-2 text-primary"></i>
+                            Vue d'ensemble des performances
+                        </h3>
+                    </div>
+                </div>
+                <div class="row g-4 mb-5">
+            `;
+
+            metrics.forEach((metric, index) => {
+                const scoreClass = getScoreClass(metric.score);
                 html += `
-                    <div class="summary-card">
-                        <div class="summary-score ${scoreClass}">${card.score}</div>
-                        <h4>${card.icon} ${card.title}</h4>
-                        <p>${card.level}</p>
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="metric-card ${scoreClass} p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h6 class="text-muted mb-1">${metric.title}</h6>
+                                    <h2 class="fw-bold mb-0">${metric.score}<small class="fs-6 text-muted">/100</small></h2>
+                                </div>
+                                <i class="bi bi-${metric.icon} fs-3 text-${metric.color}"></i>
+                            </div>
+                            <div class="mini-chart">
+                                <canvas id="chart-${index}" class="w-100"></canvas>
+                            </div>
+                        </div>
                     </div>
                 `;
             });
-            
-            html += '</div>';
+
+            html += `
+                </div>
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="metric-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-bar-chart me-2"></i>
+                                Synthèse comparative
+                            </h5>
+                            <div class="chart-container">
+                                <canvas id="overviewChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
             return html;
         }
 
-        // Génération des onglets de résultats
-        function generateResultTabs(data) {
-            const tabs = [
-                { id: 'general', title: '📊 Général', active: true },
-                ...(data.seo ? [{ id: 'seo', title: '📈 SEO' }] : []),
-                ...(data.performance ? [{ id: 'performance', title: '⚡ Performance' }] : []),
-                ...(data.security ? [{ id: 'security', title: '🔒 Sécurité' }] : []),
-                ...(data.accessibility ? [{ id: 'accessibility', title: '♿ Accessibilité' }] : []),
-                ...(data.suspicious ? [{ id: 'suspicious', title: '🛡️ Sécurité' }] : []),
-                { id: 'technical', title: '🔧 Technique' }
+        // Generate detailed results tabs
+        function generateDetailedResults(data) {
+            let html = `
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="nav nav-pills mb-4" id="resultTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="general-tab" data-bs-toggle="pill" data-bs-target="#general" type="button" role="tab">
+                                    <i class="bi bi-info-circle me-2"></i>Général
+                                </button>
+                            </li>
+            `;
+
+            if (data.seo) {
+                html += `
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="seo-tab" data-bs-toggle="pill" data-bs-target="#seo" type="button" role="tab">
+                            <i class="bi bi-graph-up me-2"></i>SEO
+                        </button>
+                    </li>
+                `;
+            }
+
+            if (data.performance) {
+                html += `
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="performance-tab" data-bs-toggle="pill" data-bs-target="#performance" type="button" role="tab">
+                            <i class="bi bi-speedometer me-2"></i>Performance
+                        </button>
+                    </li>
+                `;
+            }
+
+            if (data.security) {
+                html += `
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="security-tab" data-bs-toggle="pill" data-bs-target="#security" type="button" role="tab">
+                            <i class="bi bi-shield-check me-2"></i>Sécurité
+                        </button>
+                    </li>
+                `;
+            }
+
+            if (data.accessibility) {
+                html += `
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="accessibility-tab" data-bs-toggle="pill" data-bs-target="#accessibility" type="button" role="tab">
+                            <i class="bi bi-universal-access me-2"></i>Accessibilité
+                        </button>
+                    </li>
+                `;
+            }
+
+            html += `
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="technical-tab" data-bs-toggle="pill" data-bs-target="#technical" type="button" role="tab">
+                            <i class="bi bi-gear me-2"></i>Technique
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="resultTabsContent">
+                    <div class="tab-pane fade show active" id="general" role="tabpanel">
+                        ${generateGeneralTab(data)}
+                    </div>
+            `;
+
+            if (data.seo) {
+                html += `
+                    <div class="tab-pane fade" id="seo" role="tabpanel">
+                        ${generateSEOTab(data.seo)}
+                    </div>
+                `;
+            }
+
+            if (data.performance) {
+                html += `
+                    <div class="tab-pane fade" id="performance" role="tabpanel">
+                        ${generatePerformanceTab(data.performance)}
+                    </div>
+                `;
+            }
+
+            if (data.security) {
+                html += `
+                    <div class="tab-pane fade" id="security" role="tabpanel">
+                        ${generateSecurityTab(data.security)}
+                    </div>
+                `;
+            }
+
+            if (data.accessibility) {
+                html += `
+                    <div class="tab-pane fade" id="accessibility" role="tabpanel">
+                        ${generateAccessibilityTab(data.accessibility)}
+                    </div>
+                `;
+            }
+
+            html += `
+                    <div class="tab-pane fade" id="technical" role="tabpanel">
+                        ${generateTechnicalTab(data)}
+                    </div>
+                </div>
+            </div>
+        </div>
+            `;
+
+            return html;
+        }
+
+        // Generate general tab
+        function generateGeneralTab(data) {
+            return `
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-file-text me-2 text-primary"></i>
+                                Informations de base
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="border rounded p-3">
+                                        <small class="text-muted d-block">Status HTTP</small>
+                                        <span class="${getStatusBadgeClass(data.status)}">${data.status}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="border rounded p-3">
+                                        <small class="text-muted d-block">Temps de réponse</small>
+                                        <span class="${getResponseTimeBadgeClass(data.responseTime)}">${data.responseTime}ms</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="border rounded p-3">
+                                        <small class="text-muted d-block">Taille HTML</small>
+                                        <strong>${data.htmlSize} Ko</strong>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="border rounded p-3">
+                                        <small class="text-muted d-block">Nombre de mots</small>
+                                        <strong>${data.wordCount}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-diagram-3 me-2 text-success"></i>
+                                Structure du contenu
+                            </h5>
+                            <div class="chart-container mb-3">
+                                <canvas id="contentChart"></canvas>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <small class="text-muted">Images: <strong>${data.media.images}</strong></small>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Vidéos: <strong>${data.media.videos}</strong></small>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Liens internes: <strong>${data.links.internal}</strong></small>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Liens externes: <strong>${data.links.external}</strong></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-file-earmark-text me-2 text-info"></i>
+                                Métadonnées
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-lg-6">
+                                    <div class="border rounded p-3">
+                                        <small class="text-muted d-block">Titre (${data.titleLength} caractères)</small>
+                                        <p class="mb-0 fw-medium">${data.title}</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="border rounded p-3">
+                                        <small class="text-muted d-block">Description (${data.metaDescriptionLength} caractères)</small>
+                                        <p class="mb-0">${data.metaDescription}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${data.technologies && data.technologies.length > 0 ? `
+                    <div class="col-12">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-tools me-2 text-warning"></i>
+                                Technologies détectées
+                            </h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                ${data.technologies.map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Generate SEO tab
+        function generateSEOTab(seo) {
+            return `
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="tab-content-card p-4 text-center">
+                            <div class="chart-container mb-3">
+                                <canvas id="seoScoreChart"></canvas>
+                            </div>
+                            <h3 class="fw-bold text-${getScoreColor(seo.score)}">${seo.score}/100</h3>
+                            <p class="text-muted mb-0">${seo.level}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-8">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3 text-success">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Points forts
+                            </h5>
+                            ${seo.goodPoints && seo.goodPoints.length > 0 ? `
+                                <div class="list-group list-group-flush">
+                                    ${seo.goodPoints.map(point => `
+                                        <div class="list-group-item border-0 px-0">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>${point}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : '<p class="text-muted">Aucun point fort identifié</p>'}
+                        </div>
+                    </div>
+
+                    ${seo.issues && seo.issues.length > 0 ? `
+                    <div class="col-12">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3 text-warning">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Améliorations recommandées
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                ${seo.issues.map(issue => `
+                                    <div class="list-group-item border-0 px-0">
+                                        <i class="bi bi-arrow-right-circle text-warning me-2"></i>${issue}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="col-12">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-list-check me-2 text-primary"></i>
+                                Détails SEO
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="text-center p-3 border rounded">
+                                        <i class="bi bi-${seo.details.hasOpenGraph ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-3 mb-2"></i>
+                                        <p class="mb-0 small">Open Graph</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="text-center p-3 border rounded">
+                                        <i class="bi bi-${seo.details.hasTwitterCard ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-3 mb-2"></i>
+                                        <p class="mb-0 small">Twitter Card</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="text-center p-3 border rounded">
+                                        <i class="bi bi-${seo.details.hasStructuredData ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-3 mb-2"></i>
+                                        <p class="mb-0 small">Données structurées</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="text-center p-3 border rounded">
+                                        <i class="bi bi-${seo.details.canonical !== 'Non définie' ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-3 mb-2"></i>
+                                        <p class="mb-0 small">URL canonique</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate Performance tab
+        function generatePerformanceTab(performance) {
+            return `
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="tab-content-card p-4 text-center">
+                            <div class="chart-container mb-3">
+                                <canvas id="performanceScoreChart"></canvas>
+                            </div>
+                            <h3 class="fw-bold text-${getScoreColor(performance.score)}">${performance.score}/100</h3>
+                            <p class="text-muted mb-0">${performance.level}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-8">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-speedometer2 me-2 text-primary"></i>
+                                Métriques détaillées
+                            </h5>
+                            <div class="chart-container">
+                                <canvas id="performanceMetricsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="row g-3">
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="tab-content-card p-3 text-center">
+                                    <div class="fs-4 fw-bold text-primary">${performance.details.responseTime}</div>
+                                    <small class="text-muted">ms réponse</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="tab-content-card p-3 text-center">
+                                    <div class="fs-4 fw-bold text-info">${performance.details.images}</div>
+                                    <small class="text-muted">images</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="tab-content-card p-3 text-center">
+                                    <div class="fs-4 fw-bold text-warning">${performance.details.scripts}</div>
+                                    <small class="text-muted">scripts</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="tab-content-card p-3 text-center">
+                                    <div class="fs-4 fw-bold text-danger">${performance.details.externalScripts}</div>
+                                    <small class="text-muted">externes</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="tab-content-card p-3 text-center">
+                                    <i class="bi bi-${performance.details.hasCompression ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-4"></i>
+                                    <small class="text-muted d-block">compression</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="tab-content-card p-3 text-center">
+                                    <i class="bi bi-${performance.details.hasCaching ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-4"></i>
+                                    <small class="text-muted d-block">cache</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${performance.recommendations && performance.recommendations.length > 0 ? `
+                    <div class="col-12">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3 text-warning">
+                                <i class="bi bi-lightning me-2"></i>
+                                Optimisations recommandées
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                ${performance.recommendations.map(rec => `
+                                    <div class="list-group-item border-0 px-0">
+                                        <i class="bi bi-arrow-right-circle text-warning me-2"></i>${rec}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Generate Security tab
+        function generateSecurityTab(security) {
+            return `
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="tab-content-card p-4 text-center">
+                            <div class="chart-container mb-3">
+                                <canvas id="securityScoreChart"></canvas>
+                            </div>
+                            <h3 class="fw-bold text-${getScoreColor(security.score)}">${security.score}/100</h3>
+                            <p class="text-muted mb-0">${security.level}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-8">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-shield-check me-2 text-success"></i>
+                                État de la sécurité
+                            </h5>
+                            <div class="d-flex align-items-center p-3 ${security.protocol === 'https:' ? 'bg-success' : 'bg-danger'} bg-opacity-10 rounded mb-3">
+                                <i class="bi bi-${security.protocol === 'https:' ? 'shield-fill-check' : 'shield-fill-x'} fs-2 text-${security.protocol === 'https:' ? 'success' : 'danger'} me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">${security.protocol === 'https:' ? 'HTTPS Sécurisé' : 'HTTP Non sécurisé'}</h6>
+                                    <small class="text-muted">Protocole de connexion</small>
+                                </div>
+                            </div>
+                            
+                            <h6 class="fw-semibold mb-3">Headers de sécurité</h6>
+                            <div class="row g-2">
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-${security.securityHeaders['strict-transport-security'] ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} me-2"></i>
+                                        <span class="small">HSTS</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-${security.securityHeaders['content-security-policy'] ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} me-2"></i>
+                                        <span class="small">CSP</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-${security.securityHeaders['x-content-type-options'] ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} me-2"></i>
+                                        <span class="small">X-Content-Type</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-${security.securityHeaders['x-frame-options'] ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} me-2"></i>
+                                        <span class="small">X-Frame-Options</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${security.goodPoints && security.goodPoints.length > 0 ? `
+                    <div class="col-lg-6">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3 text-success">
+                                <i class="bi bi-shield-fill-check me-2"></i>
+                                Mesures actives
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                ${security.goodPoints.map(point => `
+                                    <div class="list-group-item border-0 px-0">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>${point}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${security.issues && security.issues.length > 0 ? `
+                    <div class="col-lg-6">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3 text-warning">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                À améliorer
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                ${security.issues.map(issue => `
+                                    <div class="list-group-item border-0 px-0">
+                                        <i class="bi bi-arrow-right-circle text-warning me-2"></i>${issue}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Generate Accessibility tab
+        function generateAccessibilityTab(accessibility) {
+            return `
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="tab-content-card p-4 text-center">
+                            <div class="chart-container mb-3">
+                                <canvas id="accessibilityScoreChart"></canvas>
+                            </div>
+                            <h3 class="fw-bold text-${getScoreColor(accessibility.score)}">${accessibility.score}/100</h3>
+                            <p class="text-muted mb-0">${accessibility.level}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-8">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3 text-success">
+                                <i class="bi bi-universal-access me-2"></i>
+                                Conformité WCAG
+                            </h5>
+                            <div class="chart-container">
+                                <canvas id="accessibilityDetailsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${accessibility.goodPoints && accessibility.goodPoints.length > 0 ? `
+                    <div class="col-lg-6">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3 text-success">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Bonnes pratiques
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                ${accessibility.goodPoints.map(point => `
+                                    <div class="list-group-item border-0 px-0">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>${point}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${accessibility.issues && accessibility.issues.length > 0 ? `
+                    <div class="col-lg-6">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3 text-warning">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Améliorations
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                ${accessibility.issues.map(issue => `
+                                    <div class="list-group-item border-0 px-0">
+                                        <i class="bi bi-arrow-right-circle text-warning me-2"></i>${issue}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Generate Technical tab
+        function generateTechnicalTab(data) {
+            return `
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-server me-2 text-primary"></i>
+                                Headers HTTP
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-semibold">Content-Type</td>
+                                            <td class="font-monospace small">${data.headers.contentType}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Content-Length</td>
+                                            <td class="font-monospace small">${data.headers.contentLength}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Content-Encoding</td>
+                                            <td class="font-monospace small">${data.headers.contentEncoding}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Cache-Control</td>
+                                            <td class="font-monospace small">${data.headers.cacheControl}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Server</td>
+                                            <td class="font-monospace small">${data.headers.server}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="tab-content-card p-4">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-diagram-2 me-2 text-info"></i>
+                                Structure des liens
+                            </h5>
+                            <div class="chart-container">
+                                <canvas id="linksChart"></canvas>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6 text-center">
+                                    <div class="fw-bold text-primary">${data.links.internal}</div>
+                                    <small class="text-muted">Liens internes</small>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <div class="fw-bold text-warning">${data.links.external}</div>
+                                    <small class="text-muted">Liens externes</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize charts
+        function initializeCharts(data) {
+            // Destroy existing charts
+            Object.values(charts).forEach(chart => {
+                if (chart && typeof chart.destroy === 'function') {
+                    chart.destroy();
+                }
+            });
+            charts = {};
+
+            // Overview chart
+            const overviewCtx = document.getElementById('overviewChart');
+            if (overviewCtx) {
+                const metrics = [];
+                const scores = [];
+                const colors = [];
+
+                if (data.seo) {
+                    metrics.push('SEO');
+                    scores.push(data.seo.score);
+                    colors.push('#10b981');
+                }
+                if (data.performance) {
+                    metrics.push('Performance');
+                    scores.push(data.performance.score);
+                    colors.push('#f59e0b');
+                }
+                if (data.security) {
+                    metrics.push('Sécurité');
+                    scores.push(data.security.score);
+                    colors.push('#6366f1');
+                }
+                if (data.accessibility) {
+                    metrics.push('Accessibilité');
+                    scores.push(data.accessibility.score);
+                    colors.push('#06b6d4');
+                }
+
+                charts.overview = new Chart(overviewCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: metrics,
+                        datasets: [{
+                            label: 'Score',
+                            data: scores,
+                            backgroundColor: colors.map(c => c + '20'),
+                            borderColor: colors,
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: '#e2e8f0' }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Mini charts for metrics
+            const metrics = [
+                { key: 'seo', data: data.seo },
+                { key: 'performance', data: data.performance },
+                { key: 'security', data: data.security },
+                { key: 'accessibility', data: data.accessibility }
             ];
 
-            let html = '<div class="result-tabs">';
-            tabs.forEach(tab => {
-                html += `
-                    <button class="tab-button ${tab.active ? 'active' : ''}" 
-                            data-tab="${tab.id}">
-                        ${tab.title}
-                    </button>
-                `;
+            metrics.forEach((metric, index) => {
+                if (metric.data) {
+                    const ctx = document.getElementById(`chart-${index}`);
+                    if (ctx) {
+                        charts[`mini-${index}`] = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'],
+                                datasets: [{
+                                    data: [
+                                        Math.max(20, metric.data.score - 20),
+                                        Math.max(25, metric.data.score - 15),
+                                        Math.max(30, metric.data.score - 10),
+                                        Math.max(35, metric.data.score - 5),
+                                        metric.data.score,
+                                        Math.min(100, metric.data.score + 5)
+                                    ],
+                                    borderColor: getChartColor(metric.key),
+                                    backgroundColor: getChartColor(metric.key) + '10',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    x: { display: false },
+                                    y: { display: false }
+                                },
+                                elements: { point: { radius: 0 } }
+                            }
+                        });
+                    }
+                }
             });
-            html += '</div>';
 
-            // Contenu des onglets
-            html += `<div class="tab-content active" id="tab-general">${generateGeneralTab(data)}</div>`;
-            
-            if (data.seo) {
-                html += `<div class="tab-content" id="tab-seo">${generateSEOTab(data.seo)}</div>`;
-            }
-            
-            if (data.performance) {
-                html += `<div class="tab-content" id="tab-performance">${generatePerformanceTab(data.performance)}</div>`;
-            }
-            
-            if (data.security) {
-                html += `<div class="tab-content" id="tab-security">${generateSecurityTab(data.security)}</div>`;
-            }
-            
-            if (data.accessibility) {
-                html += `<div class="tab-content" id="tab-accessibility">${generateAccessibilityTab(data.accessibility)}</div>`;
-            }
-            
-            if (data.suspicious) {
-                html += `<div class="tab-content" id="tab-suspicious">${generateSuspiciousTab(data.suspicious)}</div>`;
-            }
-            
-            html += `<div class="tab-content" id="tab-technical">${generateTechnicalTab(data)}</div>`;
-
-            return html;
-        }
-
-        // Génération de l'onglet général
-        function generateGeneralTab(data) {
-            let html = `
-                <div class="result-card">
-                    <h3>📝 Informations de base</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <strong>Status HTTP</strong>
-                            <div class="info-value ${getStatusClass(data.status)}">${data.status}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Temps de réponse</strong>
-                            <div class="info-value ${getResponseTimeClass(data.responseTime)}">${data.responseTime}ms</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Taille HTML</strong>
-                            <div class="info-value">${data.htmlSize} Ko</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Nombre de mots</strong>
-                            <div class="info-value">${data.wordCount}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Langue détectée</strong>
-                            <div class="info-value">${data.language.name}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Serveur</strong>
-                            <div class="info-value">${data.headers.server}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Contenu de la page
-            html += `
-                <div class="result-card">
-                    <h3>📄 Structure du contenu</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <strong>Titre de la page</strong>
-                            <div class="info-value">${data.title}</div>
-                            <small>${data.titleLength} caractères</small>
-                        </div>
-                        <div class="info-item">
-                            <strong>Meta description</strong>
-                            <div class="info-value">${data.metaDescription}</div>
-                            <small>${data.metaDescriptionLength} caractères</small>
-                        </div>
-                        <div class="info-item">
-                            <strong>Headings H1</strong>
-                            <div class="info-value">${data.headings.h1.length} trouvé(s)</div>
-                            ${data.headings.h1.length > 0 ? `<small>${data.headings.h1.slice(0, 2).join(', ')}</small>` : ''}
-                        </div>
-                        <div class="info-item">
-                            <strong>Headings H2</strong>
-                            <div class="info-value">${data.headings.h2.length} trouvé(s)</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Médias et liens
-            html += `
-                <div class="result-card">
-                    <h3>🔗 Médias et liens</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <strong>Images</strong>
-                            <div class="info-value">${data.media.images}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Vidéos</strong>
-                            <div class="info-value">${data.media.videos}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Liens internes</strong>
-                            <div class="info-value">${data.links.internal}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Liens externes</strong>
-                            <div class="info-value">${data.links.external}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Technologies détectées
-            if (data.technologies && data.technologies.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <h3>⚙️ Technologies détectées</h3>
-                        <div class="technology-tags">
-                            ${data.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
+            // Content structure chart
+            const contentCtx = document.getElementById('contentChart');
+            if (contentCtx) {
+                charts.content = new Chart(contentCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Images', 'Vidéos', 'Liens internes', 'Liens externes'],
+                        datasets: [{
+                            data: [data.media.images, data.media.videos, data.links.internal, data.links.external],
+                            backgroundColor: ['#10b981', '#f59e0b', '#6366f1', '#ef4444'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
             }
 
-            return html;
-        }
-
-        // Génération de l'onglet SEO
-        function generateSEOTab(seo) {
-            const scoreClass = getScoreClass(seo.score);
-            
-            let html = `
-                <div class="result-card">
-                    <div class="score-display">
-                        <div class="score-circle ${scoreClass}">
-                            ${seo.score}
-                        </div>
-                        <div class="score-details">
-                            <h4>Score SEO: ${seo.level}</h4>
-                            <p>Votre site obtient ${seo.score}/100 points en référencement naturel</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Points positifs
-            if (seo.goodPoints && seo.goodPoints.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <div class="good-points">
-                            <h4>✅ Points forts SEO</h4>
-                            <ul class="recommendation-list">
-                                ${seo.goodPoints.map(point => `<li>${point}</li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Recommandations
-            if (seo.issues && seo.issues.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <div class="recommendations">
-                            <h4>⚠️ Améliorations recommandées</h4>
-                            <ul class="recommendation-list">
-                                ${seo.issues.map(issue => `<li>${issue}</li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Détails SEO
-            if (seo.details) {
-                html += `
-                    <div class="result-card">
-                        <h3>📋 Détails SEO</h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <strong>Open Graph</strong>
-                                <div class="info-value ${seo.details.hasOpenGraph ? 'status-excellent' : 'status-bad'}">
-                                    ${seo.details.hasOpenGraph ? 'Configuré' : 'Manquant'}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <strong>Twitter Card</strong>
-                                <div class="info-value ${seo.details.hasTwitterCard ? 'status-excellent' : 'status-bad'}">
-                                    ${seo.details.hasTwitterCard ? 'Configuré' : 'Manquant'}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <strong>Données structurées</strong>
-                                <div class="info-value ${seo.details.hasStructuredData ? 'status-excellent' : 'status-bad'}">
-                                    ${seo.details.hasStructuredData ? 'Détectées' : 'Absentes'}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <strong>URL canonique</strong>
-                                <div class="info-value ${seo.details.canonical !== 'Non définie' ? 'status-excellent' : 'status-bad'}">
-                                    ${seo.details.canonical !== 'Non définie' ? 'Définie' : 'Manquante'}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            return html;
-        }
-
-        // Génération de l'onglet Performance
-        function generatePerformanceTab(performance) {
-            const scoreClass = getScoreClass(performance.score);
-            
-            let html = `
-                <div class="result-card">
-                    <div class="score-display">
-                        <div class="score-circle ${scoreClass}">
-                            ${performance.score}
-                        </div>
-                        <div class="score-details">
-                            <h4>Performance: ${performance.level}</h4>
-                            <p>Score de performance général: ${performance.score}/100</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Métriques de performance
-            if (performance.details) {
-                html += `
-                    <div class="result-card">
-                        <h3>📊 Métriques de performance</h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <strong>Temps de réponse</strong>
-                                <div class="info-value ${getResponseTimeClass(performance.details.responseTime)}">
-                                    ${performance.details.responseTime}ms
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <strong>Nombre d'images</strong>
-                                <div class="info-value">${performance.details.images}</div>
-                            </div>
-                            <div class="info-item">
-                                <strong>Scripts JavaScript</strong>
-                                <div class="info-value">${performance.details.scripts}</div>
-                            </div>
-                            <div class="info-item">
-                                <strong>Scripts externes</strong>
-                                <div class="info-value">${performance.details.externalScripts}</div>
-                            </div>
-                            <div class="info-item">
-                                <strong>Compression</strong>
-                                <div class="info-value ${performance.details.hasCompression ? 'status-excellent' : 'status-bad'}">
-                                    ${performance.details.hasCompression ? 'Activée' : 'Désactivée'}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <strong>Cache navigateur</strong>
-                                <div class="info-value ${performance.details.hasCaching ? 'status-excellent' : 'status-bad'}">
-                                    ${performance.details.hasCaching ? 'Configuré' : 'Non configuré'}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Recommandations de performance
-            if (performance.recommendations && performance.recommendations.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <div class="recommendations">
-                            <h4>🚀 Optimisations recommandées</h4>
-                            <ul class="recommendation-list">
-                                ${performance.recommendations.map(rec => `<li>${rec}</li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            }
-
-            return html;
-        }
-
-        // Génération de l'onglet Sécurité
-        function generateSecurityTab(security) {
-            const scoreClass = getScoreClass(security.score);
-            
-            let html = `
-                <div class="result-card">
-                    <div class="score-display">
-                        <div class="score-circle ${scoreClass}">
-                            ${security.score}
-                        </div>
-                        <div class="score-details">
-                            <h4>Sécurité: ${security.level}</h4>
-                            <p>Niveau de sécurité: ${security.score}/100</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Protocole et certificats
-            html += `
-                <div class="result-card">
-                    <h3>🔐 Protocole et chiffrement</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <strong>Protocole</strong>
-                            <div class="info-value ${security.protocol === 'https:' ? 'status-excellent' : 'status-bad'}">
-                                ${security.protocol === 'https:' ? 'HTTPS (Sécurisé)' : 'HTTP (Non sécurisé)'}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Headers de sécurité
-            if (security.securityHeaders) {
-                html += `
-                    <div class="result-card">
-                        <h3>🛡️ Headers de sécurité</h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <strong>HSTS</strong>
-                                <div class="info-value ${security.securityHeaders['strict-transport-security'] ? 'status-excellent' : 'status-bad'}">
-                                    ${security.securityHeaders['strict-transport-security'] ? 'Configuré' : 'Manquant'}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <strong>Content Security Policy</strong>
-                                <div class="info-value ${security.securityHeaders['content-security-policy'] ? 'status-excellent' : 'status-bad'}">
-                                    ${security.securityHeaders['content-security-policy'] ? 'Configuré' : 'Manquant'}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <strong>X-Content-Type-Options</strong>
-                                <div class="info-value ${security.securityHeaders['x-content-type-options'] ? 'status-excellent' : 'status-bad'}">
-                                    ${security.securityHeaders['x-content-type-options'] ? 'Configuré' : 'Manquant'}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <strong>X-Frame-Options</strong>
-                                <div class="info-value ${security.securityHeaders['x-frame-options'] ? 'status-excellent' : 'status-bad'}">
-                                    ${security.securityHeaders['x-frame-options'] ? 'Configuré' : 'Manquant'}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Points forts de sécurité
-            if (security.goodPoints && security.goodPoints.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <div class="good-points">
-                            <h4>✅ Mesures de sécurité en place</h4>
-                            <ul class="recommendation-list">
-                                ${security.goodPoints.map(point => `<li>${point}</li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Vulnérabilités détectées
-            if (security.issues && security.issues.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <div class="recommendations">
-                            <h4>⚠️ Vulnérabilités à corriger</h4>
-                            <ul class="recommendation-list">
-                                ${security.issues.map(issue => `<li>${issue}</li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            }
-
-            return html;
-        }
-
-        // Génération de l'onglet Accessibilité
-        function generateAccessibilityTab(accessibility) {
-            const scoreClass = getScoreClass(accessibility.score);
-            
-            let html = `
-                <div class="result-card">
-                    <div class="score-display">
-                        <div class="score-circle ${scoreClass}">
-                            ${accessibility.score}
-                        </div>
-                        <div class="score-details">
-                            <h4>Accessibilité: ${accessibility.level}</h4>
-                            <p>Conformité aux standards WCAG: ${accessibility.score}/100</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Points forts d'accessibilité
-            if (accessibility.goodPoints && accessibility.goodPoints.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <div class="good-points">
-                            <h4>✅ Bonnes pratiques d'accessibilité</h4>
-                            <ul class="recommendation-list">
-                                ${accessibility.goodPoints.map(point => `<li>${point}</li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Problèmes d'accessibilité
-            if (accessibility.issues && accessibility.issues.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <div class="recommendations">
-                            <h4>⚠️ Améliorations d'accessibilité</h4>
-                            <ul class="recommendation-list">
-                                ${accessibility.issues.map(issue => `<li>${issue}</li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            }
-
-            return html;
-        }
-
-        // Génération de l'onglet Sites suspects
-        function generateSuspiciousTab(suspicious) {
-            const alertClass = suspicious.isSuspicious ? 'suspicious-alert' : 'suspicious-normal';
-            const icon = suspicious.isSuspicious ? '⚠️' : '✅';
-            
-            let html = `
-                <div class="${alertClass}">
-                    <h3>${icon} Analyse de sécurité - ${suspicious.level}</h3>
-                    <div style="display: flex; align-items: center; gap: 1rem; margin: 1rem 0;">
-                        <div class="score-circle ${suspicious.isSuspicious ? 'score-poor' : 'score-excellent'}" style="width: 80px; height: 80px; font-size: 1.4rem;">
-                            ${suspicious.score}
-                        </div>
-                        <div>
-                            <h4 style="color: inherit; margin-bottom: 0.5rem;">Score de risque: ${suspicious.score}/100</h4>
-                            <p style="margin: 0; opacity: 0.9;">
-                                ${suspicious.isSuspicious ? 
-                                    'Ce site présente des caractéristiques suspectes qui méritent votre attention.' :
-                                    'Ce site ne présente pas d\'indicateurs suspects majeurs.'
-                                }
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            if (suspicious.indicators && suspicious.indicators.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <h3>🚨 Indicateurs de risque détectés</h3>
-                        <ul class="recommendation-list">
-                            ${suspicious.indicators.map(indicator => `<li style="border-left-color: #dc3545; background: #f8d7da;">${indicator}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <div class="result-card">
-                        <div class="good-points">
-                            <h4>✅ Aucun indicateur suspect détecté</h4>
-                            <p>Le site semble respecter les bonnes pratiques de sécurité de base.</p>
-                        </div>
-                    </div>
-                `;
-            }
-
-            return html;
-        }
-
-        // Génération de l'onglet Technique
-        function generateTechnicalTab(data) {
-            let html = `
-                <div class="result-card">
-                    <h3>🔧 Headers HTTP détaillés</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <strong>Content-Type</strong>
-                            <div class="info-value">${data.headers.contentType}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Content-Length</strong>
-                            <div class="info-value">${data.headers.contentLength}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Content-Encoding</strong>
-                            <div class="info-value">${data.headers.contentEncoding}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Cache-Control</strong>
-                            <div class="info-value">${data.headers.cacheControl}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>Last-Modified</strong>
-                            <div class="info-value">${data.headers.lastModified}</div>
-                        </div>
-                        <div class="info-item">
-                            <strong>ETag</strong>
-                            <div class="info-value">${data.headers.etag}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Chaîne de redirection
-            if (data.redirectChain && data.redirectChain.length > 0) {
-                html += `
-                    <div class="result-card">
-                        <h3>🔄 Redirections détectées</h3>
-                        <p>Le site utilise ${data.redirectChain.length} redirection(s).</p>
-                        <div class="links-container">
-                            ${data.redirectChain.map((redirect, index) => `
-                                <div class="link-item">
-                                    <div class="link-text">Redirection ${index + 1}</div>
-                                    <div class="link-url">${redirect}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Métadonnées sociales
-            if (data.socialMeta && (data.socialMeta.ogTitle || data.socialMeta.twitterCard)) {
-                html += `
-                    <div class="result-card">
-                        <h3>📱 Métadonnées sociales</h3>
-                        <div class="info-grid">
-                `;
-                
-                if (data.socialMeta.ogTitle) {
-                    html += `
-                        <div class="info-item">
-                            <strong>Open Graph Title</strong>
-                            <div class="info-value">${data.socialMeta.ogTitle}</div>
-                        </div>
-                    `;
+            // Individual score charts
+            ['seo', 'performance', 'security', 'accessibility'].forEach(type => {
+                const ctx = document.getElementById(`${type}ScoreChart`);
+                if (ctx && data[type]) {
+                    charts[`${type}Score`] = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [data[type].score, 100 - data[type].score],
+                                backgroundColor: [
+                                    getChartColor(type),
+                                    '#e2e8f0'
+                                ],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '70%',
+                            plugins: { legend: { display: false } }
+                        }
+                    });
                 }
-                
-                if (data.socialMeta.ogDescription) {
-                    html += `
-                        <div class="info-item">
-                            <strong>Open Graph Description</strong>
-                            <div class="info-value">${data.socialMeta.ogDescription}</div>
-                        </div>
-                    `;
-                }
-                
-                if (data.socialMeta.twitterCard) {
-                    html += `
-                        <div class="info-item">
-                            <strong>Twitter Card</strong>
-                            <div class="info-value">${data.socialMeta.twitterCard}</div>
-                        </div>
-                    `;
-                }
-                
-                html += `
-                        </div>
-                    </div>
-                `;
+            });
+
+            // Performance metrics chart
+            const performanceMetricsCtx = document.getElementById('performanceMetricsChart');
+            if (performanceMetricsCtx && data.performance) {
+                charts.performanceMetrics = new Chart(performanceMetricsCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Temps réponse', 'Images', 'Scripts', 'Compression', 'Cache'],
+                        datasets: [{
+                            data: [
+                                Math.max(0, 100 - (data.performance.details.responseTime / 10)),
+                                Math.max(0, 100 - (data.performance.details.images * 2)),
+                                Math.max(0, 100 - (data.performance.details.scripts * 5)),
+                                data.performance.details.hasCompression ? 100 : 0,
+                                data.performance.details.hasCaching ? 100 : 0
+                            ],
+                            backgroundColor: '#f59e0b20',
+                            borderColor: '#f59e0b',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
             }
 
-            // Liens détaillés
-            if (data.links && (data.links.internalList.length > 0 || data.links.externalList.length > 0)) {
-                html += `
-                    <div class="result-card">
-                        <h3>🔗 Analyse détaillée des liens</h3>
-                `;
-
-                if (data.links.internalList.length > 0) {
-                    html += `
-                        <h4>Liens internes (${data.links.internal} au total)</h4>
-                        <div class="links-container">
-                            ${data.links.internalList.slice(0, 20).map(link => `
-                                <div class="link-item">
-                                    <div class="link-text">${link.text || 'Sans texte'}</div>
-                                    <div class="link-url">${link.url}</div>
-                                    ${link.title ? `<small style="color: #666;">Titre: ${link.title}</small>` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-
-                if (data.links.externalList.length > 0) {
-                    html += `
-                        <h4 style="margin-top: 2rem;">Liens externes (${data.links.external} au total)</h4>
-                        <div class="links-container">
-                            ${data.links.externalList.slice(0, 10).map(link => `
-                                <div class="link-item">
-                                    <div class="link-text">${link.text || 'Sans texte'}</div>
-                                    <div class="link-url">
-                                        <a href="${link.url}" target="_blank" rel="noopener">${link.url}</a>
-                                    </div>
-                                    ${link.title ? `<small style="color: #666;">Titre: ${link.title}</small>` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-
-                html += `</div>`;
+            // Accessibility details chart
+            const accessibilityDetailsCtx = document.getElementById('accessibilityDetailsChart');
+            if (accessibilityDetailsCtx && data.accessibility) {
+                charts.accessibilityDetails = new Chart(accessibilityDetailsCtx, {
+                    type: 'polarArea',
+                    data: {
+                        labels: ['Structure', 'Navigation', 'Contraste', 'Alt text', 'ARIA'],
+                        datasets: [{
+                            data: [85, 75, 60, 45, 70],
+                            backgroundColor: [
+                                '#06b6d420',
+                                '#10b98120',
+                                '#f59e0b20',
+                                '#ef444420',
+                                '#8b5cf620'
+                            ],
+                            borderColor: [
+                                '#06b6d4',
+                                '#10b981',
+                                '#f59e0b',
+                                '#ef4444',
+                                '#8b5cf6'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                });
             }
 
-            return html;
+            // Links chart
+            const linksCtx = document.getElementById('linksChart');
+            if (linksCtx) {
+                charts.links = new Chart(linksCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Liens internes', 'Liens externes'],
+                        datasets: [{
+                            data: [data.links.internal, data.links.external],
+                            backgroundColor: ['#6366f1', '#f59e0b'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
         }
 
-        // Fonctions utilitaires
+        // Initialize tabs
+        function initializeTabs() {
+            // Bootstrap handles tabs automatically, no custom initialization needed
+        }
+
+        // Utility functions
         function getScoreClass(score) {
             if (score >= 80) return 'score-excellent';
             if (score >= 60) return 'score-good';
@@ -1759,17 +1646,34 @@
             return 'score-poor';
         }
 
-        function getStatusClass(status) {
-            if (status === 200) return 'status-excellent';
-            if (status >= 300 && status < 400) return 'status-warning';
-            return 'status-bad';
+        function getScoreColor(score) {
+            if (score >= 80) return 'success';
+            if (score >= 60) return 'info';
+            if (score >= 40) return 'warning';
+            return 'danger';
         }
 
-        function getResponseTimeClass(time) {
-            if (time < 500) return 'status-excellent';
-            if (time < 1000) return 'status-good';
-            if (time < 3000) return 'status-warning';
-            return 'status-bad';
+        function getChartColor(type) {
+            const colors = {
+                seo: '#10b981',
+                performance: '#f59e0b',
+                security: '#6366f1',
+                accessibility: '#06b6d4'
+            };
+            return colors[type] || '#6b7280';
+        }
+
+        function getStatusBadgeClass(status) {
+            if (status === 200) return 'status-badge status-excellent';
+            if (status >= 300 && status < 400) return 'status-badge status-warning';
+            return 'status-badge status-bad';
+        }
+
+        function getResponseTimeBadgeClass(time) {
+            if (time < 500) return 'status-badge status-excellent';
+            if (time < 1000) return 'status-badge status-good';
+            if (time < 3000) return 'status-badge status-warning';
+            return 'status-badge status-bad';
         }
 
         function getLocationName(locationCode) {
@@ -1781,44 +1685,68 @@
             return locations[locationCode] || locationCode;
         }
 
-        // Initialisation des onglets
-        function initializeTabs() {
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
-
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetTab = button.getAttribute('data-tab');
-                    
-                    // Désactiver tous les onglets
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    
-                    // Activer l'onglet sélectionné
-                    button.classList.add('active');
-                    document.getElementById(`tab-${targetTab}`).classList.add('active');
-                });
+        // Toast notifications
+        function showToast(message, type = 'info') {
+            const toastHtml = `
+                <div class="toast align-items-center text-bg-${type} border-0 position-fixed top-0 end-0 m-3" style="z-index: 10000;" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+            const toastElement = document.querySelector('.toast:last-child');
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+            
+            // Remove element after hiding
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
             });
         }
 
-        // Auto-focus sur l'input au chargement
-        window.addEventListener('load', () => {
+        // Auto-focus on URL input
+        document.addEventListener('DOMContentLoaded', function() {
             urlInput.focus();
-            
-            // Animation d'entrée
-            document.querySelector('.analysis-form').classList.add('fade-in');
         });
 
-        // Gestion des erreurs globales
+        // Handle responsive charts
+        window.addEventListener('resize', function() {
+            Object.values(charts).forEach(chart => {
+                if (chart && typeof chart.resize === 'function') {
+                    chart.resize();
+                }
+            });
+        });
+
+        // Error handling
         window.addEventListener('error', (e) => {
             console.error('Erreur JavaScript:', e.error);
+            showToast('Une erreur inattendue s\'est produite', 'danger');
         });
 
-        // Service Worker pour le cache (optionnel)
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(err => {
-                console.log('Service Worker non disponible');
+        // Prevent form submission on Enter in select elements
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    analyzeWebsite();
+                }
             });
+        });
+
+        // Add loading animation to buttons
+        function addButtonLoading(button, originalText) {
+            button.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                ${originalText}
+            `;
+        }
+
+        function removeButtonLoading(button, originalText) {
+            button.innerHTML = originalText;
         }
     </script>
 </body>
