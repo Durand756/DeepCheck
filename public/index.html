@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyseur de Sites Web Avancé</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .options-row {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-whatsapp:hover {
+            background: #128c7e;
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .result-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 3px solid #667eea;
+        }
+
+        .info-item strong {
+            display: block;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-good {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .status-warning {
+            color: #ffc107;
+            font-weight: 600;
+        }
+
+        .status-bad {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            margin-right: 1rem;
+        }
+
+        .score-excellent { background: #28a745; }
+        .score-good { background: #17a2b8; }
+        .score-medium { background: #ffc107; }
+        .score-poor { background: #dc3545; }
+
+        .links-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .link-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+        }
+
+        .suspicious-alert {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .suspicious-normal {
+            background: linear-gradient(135deg, #51cf66, #69db7c);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .error-message {
+            background: #ff6b6b;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .options-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔍 Analyseur de Sites Web Avancé</h1>
+            <p>Analysez la performance, le SEO et la sécurité de n'importe quel site web</p>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="urlInput">🌐 URL du site à analyser</label>
+                    <input 
+                        type="text" 
+                        id="urlInput" 
+                        class="url-input"
+                        placeholder="https://exemple.com ou exemple.com"
+                    >
+                </div>
+
+                <div class="options-row">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="detectSuspicious" checked>
+                        <label for="detectSuspicious">🛡️ Détection de sites suspects</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="seoAnalysis" checked>
+                        <label for="seoAnalysis">📈 Analyse SEO</label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" id="analyzeBtn">
+                        🔎 Analyser le site
+                    </button>
+                    <a href="https://wa.me/+237XXXXXXXXX?text=Bonjour%2C%20j%27aimerais%20une%20aide%20pour%20le%20SEO%20de%20mon%20site" 
+                       class="btn btn-whatsapp" 
+                       target="_blank">
+                        📱 Aide SEO / Contact
+                    </a>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyse en cours... Cela peut prendre quelques secondes.</p>
+            </div>
+
+            <div class="results" id="results">
+                <!-- Les résultats seront affichés ici -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const detectSuspiciousCheck = document.getElementById('detectSuspicious');
+        const seoAnalysisCheck = document.getElementById('seoAnalysis');
+
+        analyzeBtn.addEventListener('click', analyzeWebsite);
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                analyzeWebsite();
+            }
+        });
+
+        async function analyzeWebsite() {
+            const url = urlInput.value.trim();
+            if (!url) {
+                alert('Veuillez entrer une URL');
+                return;
+            }
+
+            // Désactiver le bouton et montrer le loading
+            analyzeBtn.disabled = true;
+            loading.style.display = 'block';
+            results.style.display = 'none';
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        options: {
+                            detectSuspicious: detectSuspiciousCheck.checked,
+                            seoAnalysis: seoAnalysisCheck.checked
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Erreur lors de l\'analyse');
+                }
+
+                const data = await response.json();
+                displayResults(data);
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                displayError(error.message);
+            } finally {
+                analyzeBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function displayError(message) {
+            results.innerHTML = `
+                <div class="error-message">
+                    <strong>❌ Erreur d'analyse</strong><br>
+                    ${message}
+                </div>
+            `;
+            results.style.display = 'block';
+        }
+
+        function displayResults(data) {
+            let html = '';
+
+            // Informations générales
+            html += `
+                <div class="result-card">
+                    <h3>📊 Informations générales</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>URL analysée</strong>
+                            <a href="${data.url}" target="_blank">${data.url}</a>
+                        </div>
+                        <div class="info-item">
+                            <strong>Status HTTP</strong>
+                            <span class="${data.status === 200 ? 'status-good' : 'status-warning'}">${data.status}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Temps de réponse</strong>
+                            <span class="${data.responseTime < 1000 ? 'status-good' : data.responseTime < 3000 ? 'status-warning' : 'status-bad'}">${data.responseTime}ms</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Taille HTML</strong>
+                            ${data.htmlSize} Ko
+                        </div>
+                        <div class="info-item">
+                            <strong>Serveur</strong>
+                            ${data.headers.server}
+                        </div>
+                        <div class="info-item">
+                            <strong>HSTS</strong>
+                            <span class="${data.headers.hsts === 'Activé' ? 'status-good' : 'status-bad'}">${data.headers.hsts}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Contenu et structure
+            html += `
+                <div class="result-card">
+                    <h3>📝 Contenu et structure</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Titre de la page</strong>
+                            ${data.title}
+                            ${data.title.length > 0 ? `<br><small>(${data.title.length} caractères)</small>` : ''}
+                        </div>
+                        <div class="info-item">
+                            <strong>Meta description</strong>
+                            ${data.metaDescription}
+                            ${data.metaDescription.length > 0 ? `<br><small>(${data.metaDescription.length} caractères)</small>` : ''}
+                        </div>
+                        <div class="info-item">
+                            <strong>Headers H1</strong>
+                            ${data.h1.length} trouvé(s)
+                            ${data.h1.length > 0 ? `<br><small>${data.h1.slice(0, 3).join(', ')}</small>` : ''}
+                        </div>
+                        <div class="info-item">
+                            <strong>Headers H2</strong>
+                            ${data.h2.length} trouvé(s)
+                        </div>
+                        <div class="info-item">
+                            <strong>Liens internes</strong>
+                            ${data.links.internal}
+                        </div>
+                        <div class="info-item">
+                            <strong>Liens externes</strong>
+                            ${data.links.external}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Analyse de sécurité/sites suspects
+            if (data.suspicious) {
+                const suspiciousClass = data.suspicious.isSuspicious ? 'suspicious-alert' : 'suspicious-normal';
+                const icon = data.suspicious.isSuspicious ? '⚠️' : '✅';
+                
+                html += `
+                    <div class="${suspiciousClass}">
+                        <h3>${icon} Analyse de sécurité - ${data.suspicious.level}</h3>
+                        <p><strong>Score de risque:</strong> ${data.suspicious.score}/100</p>
+                        ${data.suspicious.indicators.length > 0 ? `
+                            <p><strong>Indicateurs détectés:</strong></p>
+                            <ul>
+                                ${data.suspicious.indicators.map(indicator => `<li>${indicator}</li>`).join('')}
+                            </ul>
+                        ` : '<p>Aucun indicateur suspect détecté.</p>'}
+                    </div>
+                `;
+            }
+
+            // Analyse SEO
+            if (data.seo) {
+                const scoreClass = data.seo.score >= 80 ? 'score-excellent' : 
+                                 data.seo.score >= 60 ? 'score-good' : 
+                                 data.seo.score >= 40 ? 'score-medium' : 'score-poor';
+
+                html += `
+                    <div class="result-card">
+                        <h3>📈 Analyse SEO</h3>
+                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <div class="score-circle ${scoreClass}">
+                                ${data.seo.score}
+                            </div>
+                            <div>
+                                <h4>Niveau: ${data.seo.level}</h4>
+                                <p>Score SEO: ${data.seo.score}/100</p>
+                            </div>
+                        </div>
+
+                        ${data.seo.goodPoints.length > 0 ? `
+                            <div style="margin-bottom: 1rem;">
+                                <h4 style="color: #28a745;">✅ Points positifs:</h4>
+                                <ul style="margin-left: 1rem; color: #28a745;">
+                                    ${data.seo.goodPoints.map(point => `<li>${point}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+
+                        ${data.seo.issues.length > 0 ? `
+                            <div>
+                                <h4 style="color: #dc3545;">⚠️ Améliorations possibles:</h4>
+                                <ul style="margin-left: 1rem; color: #dc3545;">
+                                    ${data.seo.issues.map(issue => `<li>${issue}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            // Headers HTTP détaillés
+            html += `
+                <div class="result-card">
+                    <h3>🔧 Headers HTTP</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Content-Type</strong>
+                            ${data.headers.contentType}
+                        </div>
+                        <div class="info-item">
+                            <strong>Cache-Control</strong>
+                            ${data.headers.cacheControl}
+                        </div>
+                        <div class="info-item">
+                            <strong>Content Security Policy</strong>
+                            <span class="${data.headers.csp === 'Activé' ? 'status-good' : 'status-bad'}">${data.headers.csp}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Liens trouvés
+            if (data.links.internalList.length > 0 || data.links.externalList.length > 0) {
+                html += `
+                    <div class="result-card">
+                        <h3>🔗 Liens trouvés</h3>
+                `;
+
+                if (data.links.internalList.length > 0) {
+                    html += `
+                        <h4>Liens internes (${data.links.internal} au total)</h4>
+                        <div class="links-list">
+                            ${data.links.internalList.map(link => `
+                                <div class="link-item">
+                                    <strong>${link.text || 'Sans texte'}</strong><br>
+                                    <small>${link.url}</small>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                if (data.links.externalList.length > 0) {
+                    html += `
+                        <h4>Liens externes (${data.links.external} au total)</h4>
+                        <div class="links-list">
+                            ${data.links.externalList.map(link => `
+                                <div class="link-item">
+                                    <strong>${link.text || 'Sans texte'}</strong><br>
+                                    <small><a href="${link.url}" target="_blank">${link.url}</a></small>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+            }
+
+            // Footer avec timestamp
+            html += `
+                <div class="result-card">
+                    <p style="text-align: center; color: #666; font-size: 0.9rem;">
+                        📅 Analyse effectuée le ${new Date(data.timestamp).toLocaleString('fr-FR')}
+                    </p>
+                </div>
+            `;
+
+            results.innerHTML = html;
+            results.style.display = 'block';
+            
+            // Scroll vers les résultats
+            results.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Auto-focus sur l'input au chargement
+        window.addEventListener('load', () => {
+            urlInput.focus();
+        });
+    </script>
+</body>
+</html>
