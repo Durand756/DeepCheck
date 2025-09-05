@@ -199,6 +199,19 @@
             border-bottom: none;
         }
 
+        .chart-fallback {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+            border: 2px dashed #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .chart-fallback.show {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .dashboard-container {
                 margin: 10px;
@@ -436,1363 +449,309 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-        <!-- Chart.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+    
+    <!-- Chart.js - Version corrigée -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" 
+            onerror="handleChartJSError()"></script>
     
     <script>
         // Global variables
-const urlInput = document.getElementById('urlInput');
-const analyzeBtn = document.getElementById('analyzeBtn');
-const clearCacheBtn = document.getElementById('clearCacheBtn');
-const loadingOverlay = document.getElementById('loadingOverlay');
-const results = document.getElementById('results');
-const languageSelect = document.getElementById('languageSelect');
-const userAgentSelect = document.getElementById('userAgentSelect');
-const locationSelect = document.getElementById('locationSelect');
-const followRedirectsCheck = document.getElementById('followRedirects');
-const seoAnalysisCheck = document.getElementById('seoAnalysis');
-const performanceAnalysisCheck = document.getElementById('performanceAnalysis');
-const securityAnalysisCheck = document.getElementById('securityAnalysis');
-const accessibilityAnalysisCheck = document.getElementById('accessibilityAnalysis');
-const detectSuspiciousCheck = document.getElementById('detectSuspicious');
+        const urlInput = document.getElementById('urlInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const clearCacheBtn = document.getElementById('clearCacheBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const results = document.getElementById('results');
+        const languageSelect = document.getElementById('languageSelect');
+        const userAgentSelect = document.getElementById('userAgentSelect');
+        const locationSelect = document.getElementById('locationSelect');
+        const followRedirectsCheck = document.getElementById('followRedirects');
+        const seoAnalysisCheck = document.getElementById('seoAnalysis');
+        const performanceAnalysisCheck = document.getElementById('performanceAnalysis');
+        const securityAnalysisCheck = document.getElementById('securityAnalysis');
+        const accessibilityAnalysisCheck = document.getElementById('accessibilityAnalysis');
+        const detectSuspiciousCheck = document.getElementById('detectSuspicious');
 
-let currentAnalysisData = null;
-let charts = {};
+        let currentAnalysisData = null;
+        let charts = {};
+        let chartJSAvailable = false;
 
-// Event listeners
-analyzeBtn.addEventListener('click', analyzeWebsite);
-clearCacheBtn.addEventListener('click', clearCache);
-urlInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        analyzeWebsite();
-    }
-});
-
-// Main analysis function
-async function analyzeWebsite() {
-    const url = urlInput.value.trim();
-    if (!url) {
-        showToast('Veuillez entrer une URL valide', 'warning');
-        return;
-    }
-
-    const options = {
-        language: languageSelect.value,
-        userAgent: userAgentSelect.value,
-        location: locationSelect.value,
-        followRedirects: followRedirectsCheck.checked,
-        seoAnalysis: seoAnalysisCheck.checked,
-        performanceAnalysis: performanceAnalysisCheck.checked,
-        securityAnalysis: securityAnalysisCheck.checked,
-        accessibilityAnalysis: accessibilityAnalysisCheck.checked,
-        detectSuspicious: detectSuspiciousCheck.checked
-    };
-
-    setLoadingState(true);
-
-    try {
-        // Simulate API call - replace with actual API
-        const mockData = generateMockData(url);
-        currentAnalysisData = mockData;
-        
-        // Simulate delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        displayResults(mockData);
-        showToast('Analyse terminée avec succès', 'success');
-
-    } catch (error) {
-        console.error('Erreur:', error);
-        showToast('Erreur lors de l\'analyse: ' + error.message, 'danger');
-    } finally {
-        setLoadingState(false);
-    }
-}
-
-// Generate mock data for demo
-function generateMockData(url) {
-    return {
-        url: url,
-        status: 200,
-        responseTime: Math.floor(Math.random() * 1000) + 200,
-        htmlSize: Math.floor(Math.random() * 500) + 50,
-        wordCount: Math.floor(Math.random() * 2000) + 500,
-        title: "Exemple de titre de page - Site Web",
-        titleLength: 35,
-        metaDescription: "Description meta exemple pour ce site web analysé.",
-        metaDescriptionLength: 52,
-        language: { name: "Français" },
-        headers: {
-            server: "nginx/1.20.1",
-            contentType: "text/html; charset=UTF-8",
-            contentLength: "45230",
-            contentEncoding: "gzip",
-            cacheControl: "max-age=3600",
-            lastModified: new Date().toISOString(),
-            etag: '"abc123"'
-        },
-        headings: {
-            h1: ["Titre principal H1", "Second H1"],
-            h2: ["Sous-titre 1", "Sous-titre 2", "Sous-titre 3"]
-        },
-        media: {
-            images: Math.floor(Math.random() * 20) + 5,
-            videos: Math.floor(Math.random() * 5)
-        },
-        links: {
-            internal: Math.floor(Math.random() * 50) + 10,
-            external: Math.floor(Math.random() * 20) + 5,
-            internalList: [],
-            externalList: []
-        },
-        technologies: ["WordPress", "PHP", "MySQL", "Bootstrap", "jQuery"],
-        analysisOptions: {
-            userAgent: userAgentSelect.value,
-            location: locationSelect.value
-        },
-        seo: {
-            score: Math.floor(Math.random() * 40) + 60,
-            level: "Bon",
-            goodPoints: [
-                "Titre de page optimisé",
-                "Meta description présente",
-                "Structure H1-H6 correcte"
-            ],
-            issues: [
-                "Images sans attribut alt",
-                "URL non canonique manquante"
-            ],
-            details: {
-                hasOpenGraph: true,
-                hasTwitterCard: false,
-                hasStructuredData: true,
-                canonical: url
+        // Check if Chart.js is available
+        function checkChartJS() {
+            chartJSAvailable = typeof Chart !== 'undefined';
+            if (!chartJSAvailable) {
+                console.warn('Chart.js n\'est pas disponible - utilisation du mode fallback');
             }
-        },
-        performance: {
-            score: Math.floor(Math.random() * 30) + 70,
-            level: "Excellent",
-            details: {
-                responseTime: Math.floor(Math.random() * 500) + 200,
-                images: Math.floor(Math.random() * 20) + 5,
-                scripts: Math.floor(Math.random() * 10) + 3,
-                externalScripts: Math.floor(Math.random() * 5) + 2,
-                hasCompression: true,
-                hasCaching: true
-            },
-            recommendations: [
-                "Optimiser la taille des images",
-                "Minimiser les fichiers CSS/JS"
-            ]
-        },
-        security: {
-            score: Math.floor(Math.random() * 30) + 70,
-            level: "Sécurisé",
-            protocol: "https:",
-            securityHeaders: {
-                'strict-transport-security': true,
-                'content-security-policy': false,
-                'x-content-type-options': true,
-                'x-frame-options': true
-            },
-            goodPoints: [
-                "HTTPS activé",
-                "Headers de sécurité présents"
-            ],
-            issues: [
-                "Content Security Policy manquant"
-            ]
-        },
-        accessibility: {
-            score: Math.floor(Math.random() * 40) + 60,
-            level: "Satisfaisant",
-            goodPoints: [
-                "Structure HTML sémantique",
-                "Navigation au clavier possible"
-            ],
-            issues: [
-                "Contraste insuffisant sur certains éléments",
-                "Textes alternatifs manquants"
-            ]
-        },
-        suspicious: {
-            score: Math.floor(Math.random() * 20) + 5,
-            level: "Site sûr",
-            isSuspicious: false,
-            indicators: []
-        }
-    };
-}
-
-// Clear cache function
-async function clearCache() {
-    try {
-        clearCacheBtn.innerHTML = '<i class="bi bi-check me-2"></i>Cache vidé !';
-        clearCacheBtn.classList.add('btn-success');
-        clearCacheBtn.classList.remove('btn-outline-secondary');
-        
-        setTimeout(() => {
-            clearCacheBtn.innerHTML = '<i class="bi bi-trash me-2"></i>Vider le cache';
-            clearCacheBtn.classList.remove('btn-success');
-            clearCacheBtn.classList.add('btn-outline-secondary');
-        }, 2000);
-        
-    } catch (error) {
-        console.error('Erreur lors du nettoyage:', error);
-    }
-}
-
-// Loading state management
-function setLoadingState(isLoading) {
-    analyzeBtn.disabled = isLoading;
-    
-    if (isLoading) {
-        loadingOverlay.classList.add('show');
-        results.style.display = 'none';
-        analyzeBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Analyse en cours...';
-    } else {
-        loadingOverlay.classList.remove('show');
-        analyzeBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i>Lancer l\'analyse';
-    }
-}
-
-// Display results
-function displayResults(data) {
-    let html = generateResultHeader(data);
-    html += generateMetricsOverview(data);
-    html += generateDetailedResults(data);
-    
-    results.innerHTML = html;
-    results.style.display = 'block';
-    results.classList.add('fade-in');
-    
-    // Initialize charts after DOM is updated
-    setTimeout(() => {
-        initializeCharts(data);
-        initializeTabs();
-    }, 300);
-    
-    // Smooth scroll to results
-    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-// Generate result header
-function generateResultHeader(data) {
-    return `
-        <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
-            <i class="bi bi-check-circle-fill me-3 fs-4"></i>
-            <div>
-                <h4 class="alert-heading mb-1">Analyse terminée</h4>
-                <p class="mb-0">
-                    <strong>${data.url}</strong> | 
-                    ${data.responseTime}ms | 
-                    ${data.language.name} | 
-                    ${getLocationName(data.analysisOptions.location)}
-                </p>
-            </div>
-        </div>
-    `;
-}
-
-// Generate metrics overview
-function generateMetricsOverview(data) {
-    const metrics = [];
-    
-    if (data.seo) metrics.push({ title: 'SEO', score: data.seo.score, icon: 'graph-up', color: 'success' });
-    if (data.performance) metrics.push({ title: 'Performance', score: data.performance.score, icon: 'speedometer', color: 'warning' });
-    if (data.security) metrics.push({ title: 'Sécurité', score: data.security.score, icon: 'shield-check', color: 'primary' });
-    if (data.accessibility) metrics.push({ title: 'Accessibilité', score: data.accessibility.score, icon: 'universal-access', color: 'info' });
-
-    let html = `
-        <div class="row mb-4">
-            <div class="col-12">
-                <h3 class="fw-bold mb-3">
-                    <i class="bi bi-speedometer2 me-2 text-primary"></i>
-                    Vue d'ensemble des performances
-                </h3>
-            </div>
-        </div>
-        <div class="row g-4 mb-5">
-    `;
-
-    metrics.forEach((metric, index) => {
-        const scoreClass = getScoreClass(metric.score);
-        html += `
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <div class="metric-card ${scoreClass} p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <h6 class="text-muted mb-1">${metric.title}</h6>
-                            <h2 class="fw-bold mb-0">${metric.score}<small class="fs-6 text-muted">/100</small></h2>
-                        </div>
-                        <i class="bi bi-${metric.icon} fs-3 text-${metric.color}"></i>
-                    </div>
-                    <div class="mini-chart">
-                        <canvas id="chart-${index}" class="w-100" style="height: 120px;"></canvas>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-
-    html += `
-        </div>
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="metric-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-bar-chart me-2"></i>
-                        Synthèse comparative
-                    </h5>
-                    <div class="chart-container">
-                        <canvas id="overviewChart" style="height: 200px;"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-    return html;
-}
-
-// Generate detailed results tabs
-function generateDetailedResults(data) {
-    let html = `
-        <div class="row">
-            <div class="col-12">
-                <ul class="nav nav-pills mb-4" id="resultTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="general-tab" data-bs-toggle="pill" data-bs-target="#general" type="button" role="tab">
-                            <i class="bi bi-info-circle me-2"></i>Général
-                        </button>
-                    </li>
-    `;
-
-    if (data.seo) {
-        html += `
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="seo-tab" data-bs-toggle="pill" data-bs-target="#seo" type="button" role="tab">
-                    <i class="bi bi-graph-up me-2"></i>SEO
-                </button>
-            </li>
-        `;
-    }
-
-    if (data.performance) {
-        html += `
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="performance-tab" data-bs-toggle="pill" data-bs-target="#performance" type="button" role="tab">
-                    <i class="bi bi-speedometer me-2"></i>Performance
-                </button>
-            </li>
-        `;
-    }
-
-    if (data.security) {
-        html += `
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="security-tab" data-bs-toggle="pill" data-bs-target="#security" type="button" role="tab">
-                    <i class="bi bi-shield-check me-2"></i>Sécurité
-                </button>
-            </li>
-        `;
-    }
-
-    if (data.accessibility) {
-        html += `
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="accessibility-tab" data-bs-toggle="pill" data-bs-target="#accessibility" type="button" role="tab">
-                    <i class="bi bi-universal-access me-2"></i>Accessibilité
-                </button>
-            </li>
-        `;
-    }
-
-    html += `
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="technical-tab" data-bs-toggle="pill" data-bs-target="#technical" type="button" role="tab">
-                    <i class="bi bi-gear me-2"></i>Technique
-                </button>
-            </li>
-        </ul>
-
-        <div class="tab-content" id="resultTabsContent">
-            <div class="tab-pane fade show active" id="general" role="tabpanel">
-                ${generateGeneralTab(data)}
-            </div>
-    `;
-
-    if (data.seo) {
-        html += `
-            <div class="tab-pane fade" id="seo" role="tabpanel">
-                ${generateSEOTab(data.seo)}
-            </div>
-        `;
-    }
-
-    if (data.performance) {
-        html += `
-            <div class="tab-pane fade" id="performance" role="tabpanel">
-                ${generatePerformanceTab(data.performance)}
-            </div>
-        `;
-    }
-
-    if (data.security) {
-        html += `
-            <div class="tab-pane fade" id="security" role="tabpanel">
-                ${generateSecurityTab(data.security)}
-            </div>
-        `;
-    }
-
-    if (data.accessibility) {
-        html += `
-            <div class="tab-pane fade" id="accessibility" role="tabpanel">
-                ${generateAccessibilityTab(data.accessibility)}
-            </div>
-        `;
-    }
-
-    html += `
-            <div class="tab-pane fade" id="technical" role="tabpanel">
-                ${generateTechnicalTab(data)}
-            </div>
-        </div>
-    </div>
-</div>
-    `;
-
-    return html;
-}
-
-// Generate general tab
-function generateGeneralTab(data) {
-    return `
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-file-text me-2 text-primary"></i>
-                        Informations de base
-                    </h5>
-                    <div class="row g-3">
-                        <div class="col-sm-6">
-                            <div class="border rounded p-3">
-                                <small class="text-muted d-block">Status HTTP</small>
-                                <span class="${getStatusBadgeClass(data.status)}">${data.status}</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="border rounded p-3">
-                                <small class="text-muted d-block">Temps de réponse</small>
-                                <span class="${getResponseTimeBadgeClass(data.responseTime)}">${data.responseTime}ms</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="border rounded p-3">
-                                <small class="text-muted d-block">Taille HTML</small>
-                                <strong>${data.htmlSize} Ko</strong>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="border rounded p-3">
-                                <small class="text-muted d-block">Nombre de mots</small>
-                                <strong>${data.wordCount}</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-diagram-3 me-2 text-success"></i>
-                        Structure du contenu
-                    </h5>
-                    <div style="height: 200px; position: relative;">
-                        <canvas id="contentChart"></canvas>
-                    </div>
-                    <div class="row g-2 mt-3">
-                        <div class="col-6">
-                            <small class="text-muted">Images: <strong>${data.media.images}</strong></small>
-                        </div>
-                        <div class="col-6">
-                            <small class="text-muted">Vidéos: <strong>${data.media.videos}</strong></small>
-                        </div>
-                        <div class="col-6">
-                            <small class="text-muted">Liens internes: <strong>${data.links.internal}</strong></small>
-                        </div>
-                        <div class="col-6">
-                            <small class="text-muted">Liens externes: <strong>${data.links.external}</strong></small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-file-earmark-text me-2 text-info"></i>
-                        Métadonnées
-                    </h5>
-                    <div class="row g-3">
-                        <div class="col-lg-6">
-                            <div class="border rounded p-3">
-                                <small class="text-muted d-block">Titre (${data.titleLength} caractères)</small>
-                                <p class="mb-0 fw-medium">${data.title}</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="border rounded p-3">
-                                <small class="text-muted d-block">Description (${data.metaDescriptionLength} caractères)</small>
-                                <p class="mb-0">${data.metaDescription}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            ${data.technologies && data.technologies.length > 0 ? `
-            <div class="col-12">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-tools me-2 text-warning"></i>
-                        Technologies détectées
-                    </h5>
-                    <div class="d-flex flex-wrap gap-2">
-                        ${data.technologies.map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
-                    </div>
-                </div>
-            </div>
-            ` : ''}
-        </div>
-    `;
-}
-
-// Generate SEO tab
-function generateSEOTab(seo) {
-    return `
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="tab-content-card p-4 text-center">
-                    <div style="height: 200px; position: relative;">
-                        <canvas id="seoScoreChart"></canvas>
-                    </div>
-                    <h3 class="fw-bold text-${getScoreColor(seo.score)}">${seo.score}/100</h3>
-                    <p class="text-muted mb-0">${seo.level}</p>
-                </div>
-            </div>
-            
-            <div class="col-lg-8">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3 text-success">
-                        <i class="bi bi-check-circle me-2"></i>
-                        Points forts
-                    </h5>
-                    ${seo.goodPoints && seo.goodPoints.length > 0 ? `
-                        <div class="list-group list-group-flush">
-                            ${seo.goodPoints.map(point => `
-                                <div class="list-group-item border-0 px-0">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>${point}
-                                </div>
-                            `).join('')}
-                        </div>
-                    ` : '<p class="text-muted">Aucun point fort identifié</p>'}
-                </div>
-            </div>
-
-            ${seo.issues && seo.issues.length > 0 ? `
-            <div class="col-12">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3 text-warning">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        Améliorations recommandées
-                    </h5>
-                    <div class="list-group list-group-flush">
-                        ${seo.issues.map(issue => `
-                            <div class="list-group-item border-0 px-0">
-                                <i class="bi bi-arrow-right-circle text-warning me-2"></i>${issue}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-            ` : ''}
-
-            <div class="col-12">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-list-check me-2 text-primary"></i>
-                        Détails SEO
-                    </h5>
-                    <div class="row g-3">
-                        <div class="col-md-3 col-sm-6">
-                            <div class="text-center p-3 border rounded">
-                                <i class="bi bi-${seo.details.hasOpenGraph ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-3 mb-2"></i>
-                                <p class="mb-0 small">Open Graph</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="text-center p-3 border rounded">
-                                <i class="bi bi-${seo.details.hasTwitterCard ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-3 mb-2"></i>
-                                <p class="mb-0 small">Twitter Card</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="text-center p-3 border rounded">
-                                <i class="bi bi-${seo.details.hasStructuredData ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-3 mb-2"></i>
-                                <p class="mb-0 small">Données structurées</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="text-center p-3 border rounded">
-                                <i class="bi bi-${seo.details.canonical !== 'Non définie' ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-3 mb-2"></i>
-                                <p class="mb-0 small">URL canonique</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// Generate Performance tab
-function generatePerformanceTab(performance) {
-    return `
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="tab-content-card p-4 text-center">
-                    <div style="height: 200px; position: relative;">
-                        <canvas id="performanceScoreChart"></canvas>
-                    </div>
-                    <h3 class="fw-bold text-${getScoreColor(performance.score)}">${performance.score}/100</h3>
-                    <p class="text-muted mb-0">${performance.level}</p>
-                </div>
-            </div>
-            
-            <div class="col-lg-8">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-speedometer2 me-2 text-primary"></i>
-                        Métriques détaillées
-                    </h5>
-                    <div style="height: 200px; position: relative;">
-                        <canvas id="performanceMetricsChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="row g-3">
-                    <div class="col-md-2 col-sm-4 col-6">
-                        <div class="tab-content-card p-3 text-center">
-                            <div class="fs-4 fw-bold text-primary">${performance.details.responseTime}</div>
-                            <small class="text-muted">ms réponse</small>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-4 col-6">
-                        <div class="tab-content-card p-3 text-center">
-                            <div class="fs-4 fw-bold text-info">${performance.details.images}</div>
-                            <small class="text-muted">images</small>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-4 col-6">
-                        <div class="tab-content-card p-3 text-center">
-                            <div class="fs-4 fw-bold text-warning">${performance.details.scripts}</div>
-                            <small class="text-muted">scripts</small>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-4 col-6">
-                        <div class="tab-content-card p-3 text-center">
-                            <div class="fs-4 fw-bold text-danger">${performance.details.externalScripts}</div>
-                            <small class="text-muted">externes</small>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-4 col-6">
-                        <div class="tab-content-card p-3 text-center">
-                            <i class="bi bi-${performance.details.hasCompression ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-4"></i>
-                            <small class="text-muted d-block">compression</small>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-4 col-6">
-                        <div class="tab-content-card p-3 text-center">
-                            <i class="bi bi-${performance.details.hasCaching ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-4"></i>
-                            <small class="text-muted d-block">cache</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            ${performance.recommendations && performance.recommendations.length > 0 ? `
-            <div class="col-12">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3 text-warning">
-                        <i class="bi bi-lightning me-2"></i>
-                        Optimisations recommandées
-                    </h5>
-                    <div class="list-group list-group-flush">
-                        ${performance.recommendations.map(rec => `
-                            <div class="list-group-item border-0 px-0">
-                                <i class="bi bi-arrow-right-circle text-warning me-2"></i>${rec}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-            ` : ''}
-        </div>
-    `;
-}
-
-// Generate Security tab
-function generateSecurityTab(security) {
-    return `
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="tab-content-card p-4 text-center">
-                    <div style="height: 200px; position: relative;">
-                        <canvas id="securityScoreChart"></canvas>
-                    </div>
-                    <h3 class="fw-bold text-${getScoreColor(security.score)}">${security.score}/100</h3>
-                    <p class="text-muted mb-0">${security.level}</p>
-                </div>
-            </div>
-            
-            <div class="col-lg-8">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-shield-check me-2 text-success"></i>
-                        État de la sécurité
-                    </h5>
-                    <div class="d-flex align-items-center p-3 ${security.protocol === 'https:' ? 'bg-success' : 'bg-danger'} bg-opacity-10 rounded mb-3">
-                        <i class="bi bi-${security.protocol === 'https:' ? 'shield-fill-check' : 'shield-fill-x'} fs-2 text-${security.protocol === 'https:' ? 'success' : 'danger'} me-3"></i>
-                        <div>
-                            <h6 class="mb-1">${security.protocol === 'https:' ? 'HTTPS Sécurisé' : 'HTTP Non sécurisé'}</h6>
-                            <small class="text-muted">Protocole de connexion</small>
-                        </div>
-                    </div>
-                    
-                    <h6 class="fw-semibold mb-3">Headers de sécurité</h6>
-                    <div class="row g-2">
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-${security.securityHeaders['strict-transport-security'] ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} me-2"></i>
-                                <span class="small">HSTS</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-${security.securityHeaders['content-security-policy'] ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} me-2"></i>
-                                <span class="small">CSP</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-${security.securityHeaders['x-content-type-options'] ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} me-2"></i>
-                                <span class="small">X-Content-Type</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-${security.securityHeaders['x-frame-options'] ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} me-2"></i>
-                                <span class="small">X-Frame-Options</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            ${security.goodPoints && security.goodPoints.length > 0 ? `
-            <div class="col-lg-6">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3 text-success">
-                        <i class="bi bi-shield-fill-check me-2"></i>
-                        Mesures actives
-                    </h5>
-                    <div class="list-group list-group-flush">
-                        ${security.goodPoints.map(point => `
-                            <div class="list-group-item border-0 px-0">
-                                <i class="bi bi-check-circle-fill text-success me-2"></i>${point}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-            ` : ''}
-
-            ${security.issues && security.issues.length > 0 ? `
-            <div class="col-lg-6">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3 text-warning">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        À améliorer
-                    </h5>
-                    <div class="list-group list-group-flush">
-                        ${security.issues.map(issue => `
-                            <div class="list-group-item border-0 px-0">
-                                <i class="bi bi-arrow-right-circle text-warning me-2"></i>${issue}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-            ` : ''}
-        </div>
-    `;
-}
-
-// Generate Accessibility tab
-function generateAccessibilityTab(accessibility) {
-    return `
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="tab-content-card p-4 text-center">
-                    <div style="height: 200px; position: relative;">
-                        <canvas id="accessibilityScoreChart"></canvas>
-                    </div>
-                    <h3 class="fw-bold text-${getScoreColor(accessibility.score)}">${accessibility.score}/100</h3>
-                    <p class="text-muted mb-0">${accessibility.level}</p>
-                </div>
-            </div>
-            
-            <div class="col-lg-8">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3 text-success">
-                        <i class="bi bi-universal-access me-2"></i>
-                        Conformité WCAG
-                    </h5>
-                    <div style="height: 200px; position: relative;">
-                        <canvas id="accessibilityDetailsChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            ${accessibility.goodPoints && accessibility.goodPoints.length > 0 ? `
-            <div class="col-lg-6">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3 text-success">
-                        <i class="bi bi-check-circle me-2"></i>
-                        Bonnes pratiques
-                    </h5>
-                    <div class="list-group list-group-flush">
-                        ${accessibility.goodPoints.map(point => `
-                            <div class="list-group-item border-0 px-0">
-                                <i class="bi bi-check-circle-fill text-success me-2"></i>${point}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-            ` : ''}
-
-            ${accessibility.issues && accessibility.issues.length > 0 ? `
-            <div class="col-lg-6">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3 text-warning">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        Améliorations
-                    </h5>
-                    <div class="list-group list-group-flush">
-                        ${accessibility.issues.map(issue => `
-                            <div class="list-group-item border-0 px-0">
-                                <i class="bi bi-arrow-right-circle text-warning me-2"></i>${issue}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-            ` : ''}
-        </div>
-    `;
-}
-
-// Generate Technical tab
-function generateTechnicalTab(data) {
-    return `
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-server me-2 text-primary"></i>
-                        Headers HTTP
-                    </h5>
-                    <div class="table-responsive">
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <td class="fw-semibold">Content-Type</td>
-                                    <td class="font-monospace small">${data.headers.contentType}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-semibold">Content-Length</td>
-                                    <td class="font-monospace small">${data.headers.contentLength}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-semibold">Content-Encoding</td>
-                                    <td class="font-monospace small">${data.headers.contentEncoding}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-semibold">Cache-Control</td>
-                                    <td class="font-monospace small">${data.headers.cacheControl}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-semibold">Server</td>
-                                    <td class="font-monospace small">${data.headers.server}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="tab-content-card p-4">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-diagram-2 me-2 text-info"></i>
-                        Structure des liens
-                    </h5>
-                    <div style="height: 200px; position: relative;">
-                        <canvas id="linksChart"></canvas>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-6 text-center">
-                            <div class="fw-bold text-primary">${data.links.internal}</div>
-                            <small class="text-muted">Liens internes</small>
-                        </div>
-                        <div class="col-6 text-center">
-                            <div class="fw-bold text-warning">${data.links.external}</div>
-                            <small class="text-muted">Liens externes</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// Initialize charts
-function initializeCharts(data) {
-    // Destroy existing charts
-    Object.values(charts).forEach(chart => {
-        if (chart && typeof chart.destroy === 'function') {
-            chart.destroy();
-        }
-    });
-    charts = {};
-
-    // Check if Chart.js is available
-    if (typeof Chart === 'undefined') {
-        console.error('Chart.js n\'est pas disponible');
-        return;
-    }
-
-    // Overview chart
-    const overviewCtx = document.getElementById('overviewChart');
-    if (overviewCtx) {
-        const metrics = [];
-        const scores = [];
-        const colors = [];
-
-        if (data.seo) {
-            metrics.push('SEO');
-            scores.push(data.seo.score);
-            colors.push('#10b981');
-        }
-        if (data.performance) {
-            metrics.push('Performance');
-            scores.push(data.performance.score);
-            colors.push('#f59e0b');
-        }
-        if (data.security) {
-            metrics.push('Sécurité');
-            scores.push(data.security.score);
-            colors.push('#6366f1');
-        }
-        if (data.accessibility) {
-            metrics.push('Accessibilité');
-            scores.push(data.accessibility.score);
-            colors.push('#06b6d4');
+            return chartJSAvailable;
         }
 
-        charts.overview = new Chart(overviewCtx, {
-            type: 'bar',
-            data: {
-                labels: metrics,
-                datasets: [{
-                    label: 'Score',
-                    data: scores,
-                    backgroundColor: colors.map(c => c + '40'),
-                    borderColor: colors,
-                    borderWidth: 2,
-                    borderRadius: 8,
-                    borderSkipped: false
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        grid: { color: '#e2e8f0' }
-                    },
-                    x: {
-                        grid: { display: false }
-                    }
-                }
+        // Handle Chart.js loading error
+        function handleChartJSError() {
+            console.error('Erreur de chargement de Chart.js');
+            chartJSAvailable = false;
+            showToast('Charts non disponibles - données affichées sous forme alternative', 'warning');
+        }
+
+        // Event listeners
+        analyzeBtn.addEventListener('click', analyzeWebsite);
+        clearCacheBtn.addEventListener('click', clearCache);
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                analyzeWebsite();
             }
         });
-    }
 
-    // Mini charts for metrics
-    const metricsData = [
-        { key: 'seo', data: data.seo },
-        { key: 'performance', data: data.performance },
-        { key: 'security', data: data.security },
-        { key: 'accessibility', data: data.accessibility }
-    ];
+        // Main analysis function
+        async function analyzeWebsite() {
+            const url = urlInput.value.trim();
+            if (!url) {
+                showToast('Veuillez entrer une URL valide', 'warning');
+                return;
+            }
 
-    metricsData.forEach((metric, index) => {
-        if (metric.data) {
-            const ctx = document.getElementById(`chart-${index}`);
-            if (ctx) {
-                const baseScore = metric.data.score;
-                charts[`mini-${index}`] = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun'],
-                        datasets: [{
-                            data: [
-                                Math.max(20, baseScore - Math.random() * 20),
-                                Math.max(25, baseScore - Math.random() * 15),
-                                Math.max(30, baseScore - Math.random() * 10),
-                                Math.max(35, baseScore - Math.random() * 5),
-                                baseScore,
-                                Math.min(100, baseScore + Math.random() * 5)
-                            ],
-                            borderColor: getChartColor(metric.key),
-                            backgroundColor: getChartColor(metric.key) + '20',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            x: { display: false },
-                            y: { display: false }
-                        },
-                        elements: { point: { radius: 0 } }
-                    }
-                });
+            const options = {
+                language: languageSelect.value,
+                userAgent: userAgentSelect.value,
+                location: locationSelect.value,
+                followRedirects: followRedirectsCheck.checked,
+                seoAnalysis: seoAnalysisCheck.checked,
+                performanceAnalysis: performanceAnalysisCheck.checked,
+                securityAnalysis: securityAnalysisCheck.checked,
+                accessibilityAnalysis: accessibilityAnalysisCheck.checked,
+                detectSuspicious: detectSuspiciousCheck.checked
+            };
+
+            setLoadingState(true);
+
+            try {
+                // Simulate API call - replace with actual API
+                const mockData = generateMockData(url);
+                currentAnalysisData = mockData;
+                
+                // Simulate delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                displayResults(mockData);
+                showToast('Analyse terminée avec succès', 'success');
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                showToast('Erreur lors de l\'analyse: ' + error.message, 'danger');
+            } finally {
+                setLoadingState(false);
             }
         }
-    });
 
-    // Content structure chart
-    const contentCtx = document.getElementById('contentChart');
-    if (contentCtx) {
-        charts.content = new Chart(contentCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Images', 'Vidéos', 'Liens internes', 'Liens externes'],
-                datasets: [{
-                    data: [data.media.images, data.media.videos, data.links.internal, data.links.external],
-                    backgroundColor: ['#10b981', '#f59e0b', '#6366f1', '#ef4444'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { 
-                        display: true,
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-    }
-
-    // Individual score charts
-    ['seo', 'performance', 'security', 'accessibility'].forEach(type => {
-        const ctx = document.getElementById(`${type}ScoreChart`);
-        if (ctx && data[type]) {
-            const score = data[type].score;
-            charts[`${type}Score`] = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        data: [score, 100 - score],
-                        backgroundColor: [
-                            getChartColor(type),
-                            '#e2e8f0'
-                        ],
-                        borderWidth: 0
-                    }]
+        // Generate mock data for demo
+        function generateMockData(url) {
+            return {
+                url: url,
+                status: 200,
+                responseTime: Math.floor(Math.random() * 1000) + 200,
+                htmlSize: Math.floor(Math.random() * 500) + 50,
+                wordCount: Math.floor(Math.random() * 2000) + 500,
+                title: "Exemple de titre de page - Site Web",
+                titleLength: 35,
+                metaDescription: "Description meta exemple pour ce site web analysé.",
+                metaDescriptionLength: 52,
+                language: { name: "Français" },
+                headers: {
+                    server: "nginx/1.20.1",
+                    contentType: "text/html; charset=UTF-8",
+                    contentLength: "45230",
+                    contentEncoding: "gzip",
+                    cacheControl: "max-age=3600",
+                    lastModified: new Date().toISOString(),
+                    etag: '"abc123"'
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: { enabled: false }
+                headings: {
+                    h1: ["Titre principal H1", "Second H1"],
+                    h2: ["Sous-titre 1", "Sous-titre 2", "Sous-titre 3"]
+                },
+                media: {
+                    images: Math.floor(Math.random() * 20) + 5,
+                    videos: Math.floor(Math.random() * 5)
+                },
+                links: {
+                    internal: Math.floor(Math.random() * 50) + 10,
+                    external: Math.floor(Math.random() * 20) + 5,
+                    internalList: [],
+                    externalList: []
+                },
+                technologies: ["WordPress", "PHP", "MySQL", "Bootstrap", "jQuery"],
+                analysisOptions: {
+                    userAgent: userAgentSelect.value,
+                    location: locationSelect.value
+                },
+                seo: {
+                    score: Math.floor(Math.random() * 40) + 60,
+                    level: "Bon",
+                    goodPoints: [
+                        "Titre de page optimisé",
+                        "Meta description présente",
+                        "Structure H1-H6 correcte"
+                    ],
+                    issues: [
+                        "Images sans attribut alt",
+                        "URL non canonique manquante"
+                    ],
+                    details: {
+                        hasOpenGraph: true,
+                        hasTwitterCard: false,
+                        hasStructuredData: true,
+                        canonical: url
+                    }
+                },
+                performance: {
+                    score: Math.floor(Math.random() * 30) + 70,
+                    level: "Excellent",
+                    details: {
+                        responseTime: Math.floor(Math.random() * 500) + 200,
+                        images: Math.floor(Math.random() * 20) + 5,
+                        scripts: Math.floor(Math.random() * 10) + 3,
+                        externalScripts: Math.floor(Math.random() * 5) + 2,
+                        hasCompression: true,
+                        hasCaching: true
+                    },
+                    recommendations: [
+                        "Optimiser la taille des images",
+                        "Minimiser les fichiers CSS/JS"
+                    ]
+                },
+                security: {
+                    score: Math.floor(Math.random() * 30) + 70,
+                    level: "Sécurisé",
+                    protocol: "https:",
+                    securityHeaders: {
+                        'strict-transport-security': true,
+                        'content-security-policy': false,
+                        'x-content-type-options': true,
+                        'x-frame-options': true
+                    },
+                    goodPoints: [
+                        "HTTPS activé",
+                        "Headers de sécurité présents"
+                    ],
+                    issues: [
+                        "Content Security Policy manquant"
+                    ]
+                },
+                accessibility: {
+                    score: Math.floor(Math.random() * 40) + 60,
+                    level: "Satisfaisant",
+                    goodPoints: [
+                        "Structure HTML sémantique",
+                        "Navigation au clavier possible"
+                    ],
+                    issues: [
+                        "Contraste insuffisant sur certains éléments",
+                        "Textes alternatifs manquants"
+                    ]
+                },
+                suspicious: {
+                    score: Math.floor(Math.random() * 20) + 5,
+                    level: "Site sûr",
+                    isSuspicious: false,
+                    indicators: []
+                }
+            };
+        }
+
+        // Clear cache function
+        async function clearCache() {
+            try {
+                clearCacheBtn.innerHTML = '<i class="bi bi-check me-2"></i>Cache vidé !';
+                clearCacheBtn.classList.add('btn-success');
+                clearCacheBtn.classList.remove('btn-outline-secondary');
+                
+                setTimeout(() => {
+                    clearCacheBtn.innerHTML = '<i class="bi bi-trash me-2"></i>Vider le cache';
+                    clearCacheBtn.classList.remove('btn-success');
+                    clearCacheBtn.classList.add('btn-outline-secondary');
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Erreur lors du nettoyage:', error);
+            }
+        }
+
+        // Loading state management
+        function setLoadingState(isLoading) {
+            analyzeBtn.disabled = isLoading;
+            
+            if (isLoading) {
+                loadingOverlay.classList.add('show');
+                results.style.display = 'none';
+                analyzeBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Analyse en cours...';
+            } else {
+                loadingOverlay.classList.remove('show');
+                analyzeBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i>Lancer l\'analyse';
+            }
+        }
+
+        // Display results
+        function displayResults(data) {
+            let html = generateResultHeader(data);
+            html += generateMetricsOverview(data);
+            html += generateDetailedResults(data);
+            
+            results.innerHTML = html;
+            results.style.display = 'block';
+            results.classList.add('fade-in');
+            
+            // Initialize charts after DOM is updated
+            setTimeout(() => {
+                if (checkChartJS()) {
+                    initializeCharts(data);
+                } else {
+                    initializeFallbacks(data);
+                }
+                initializeTabs();
+            }, 300);
+            
+            // Smooth scroll to results
+            results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Initialize fallbacks when Chart.js is not available
+        function initializeFallbacks(data) {
+            // Show fallback content for charts
+            document.querySelectorAll('canvas').forEach(canvas => {
+                const fallback = canvas.parentElement.querySelector('.chart-fallback');
+                if (!fallback) {
+                    const fallbackDiv = document.createElement('div');
+                    fallbackDiv.className = 'chart-fallback show';
+                    fallbackDiv.innerHTML = '<i class="bi bi-bar-chart fs-1 mb-2"></i><p>Graphique non disponible</p>';
+                    canvas.parentElement.appendChild(fallbackDiv);
+                }
+                canvas.style.display = 'none';
+            });
+
+            // Show metric values instead of charts
+            const metrics = ['seo', 'performance', 'security', 'accessibility'];
+            metrics.forEach((metric, index) => {
+                if (data[metric]) {
+                    const chartElement = document.getElementById(`chart-${index}`);
+                    if (chartElement) {
+                        chartElement.parentElement.innerHTML = `
+                            <div class="text-center p-3">
+                                <div class="display-6 fw-bold text-${getScoreColor(data[metric].score)}">${data[metric].score}</div>
+                                <small class="text-muted">Score ${metric.toUpperCase()}</small>
+                            </div>
+                        `;
                     }
                 }
             });
         }
-    });
 
-    // Performance metrics chart
-    const performanceMetricsCtx = document.getElementById('performanceMetricsChart');
-    if (performanceMetricsCtx && data.performance) {
-        const perfDetails = data.performance.details;
-        charts.performanceMetrics = new Chart(performanceMetricsCtx, {
-            type: 'radar',
-            data: {
-                labels: ['Temps réponse', 'Images', 'Scripts', 'Compression', 'Cache'],
-                datasets: [{
-                    data: [
-                        Math.max(0, 100 - (perfDetails.responseTime / 10)),
-                        Math.max(0, 100 - (perfDetails.images * 2)),
-                        Math.max(0, 100 - (perfDetails.scripts * 5)),
-                        perfDetails.hasCompression ? 100 : 0,
-                        perfDetails.hasCaching ? 100 : 0
-                    ],
-                    backgroundColor: '#f59e0b30',
-                    borderColor: '#f59e0b',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#f59e0b'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    r: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: { display: false },
-                        grid: { color: '#e2e8f0' }
-                    }
-                }
-            }
-        });
-    }
-
-    // Accessibility details chart
-    const accessibilityDetailsCtx = document.getElementById('accessibilityDetailsChart');
-    if (accessibilityDetailsCtx && data.accessibility) {
-        charts.accessibilityDetails = new Chart(accessibilityDetailsCtx, {
-            type: 'polarArea',
-            data: {
-                labels: ['Structure', 'Navigation', 'Contraste', 'Alt text', 'ARIA'],
-                datasets: [{
-                    data: [85, 75, 60, 45, 70],
-                    backgroundColor: [
-                        '#06b6d430',
-                        '#10b98130',
-                        '#f59e0b30',
-                        '#ef444430',
-                        '#8b5cf630'
-                    ],
-                    borderColor: [
-                        '#06b6d4',
-                        '#10b981',
-                        '#f59e0b',
-                        '#ef4444',
-                        '#8b5cf6'
-                    ],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { 
-                    legend: { 
-                        display: true,
-                        position: 'bottom'
-                    } 
-                }
-            }
-        });
-    }
-
-    // Links chart
-    const linksCtx = document.getElementById('linksChart');
-    if (linksCtx) {
-        charts.links = new Chart(linksCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Liens internes', 'Liens externes'],
-                datasets: [{
-                    data: [data.links.internal, data.links.external],
-                    backgroundColor: ['#6366f1', '#f59e0b'],
-                    borderWidth: 2,
-                    borderColor: '#fff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { 
-                        display: true,
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-    }
-}
-
-// Initialize tabs
-function initializeTabs() {
-    // Bootstrap handles tabs automatically
-    const triggerTabList = [].slice.call(document.querySelectorAll('#resultTabs button'));
-    triggerTabList.forEach(function (triggerEl) {
-        const tabTrigger = new bootstrap.Tab(triggerEl);
-        
-        triggerEl.addEventListener('click', function (event) {
-            event.preventDefault();
-            tabTrigger.show();
-        });
-    });
-}
-
-// Utility functions
-function getScoreClass(score) {
-    if (score >= 80) return 'score-excellent';
-    if (score >= 60) return 'score-good';
-    if (score >= 40) return 'score-medium';
-    return 'score-poor';
-}
-
-function getScoreColor(score) {
-    if (score >= 80) return 'success';
-    if (score >= 60) return 'info';
-    if (score >= 40) return 'warning';
-    return 'danger';
-}
-
-function getChartColor(type) {
-    const colors = {
-        seo: '#10b981',
-        performance: '#f59e0b',
-        security: '#6366f1',
-        accessibility: '#06b6d4'
-    };
-    return colors[type] || '#6b7280';
-}
-
-function getStatusBadgeClass(status) {
-    if (status === 200) return 'status-badge status-excellent';
-    if (status >= 300 && status < 400) return 'status-badge status-warning';
-    return 'status-badge status-bad';
-}
-
-function getResponseTimeBadgeClass(time) {
-    if (time < 500) return 'status-badge status-excellent';
-    if (time < 1000) return 'status-badge status-good';
-    if (time < 3000) return 'status-badge status-warning';
-    return 'status-badge status-bad';
-}
-
-function getLocationName(locationCode) {
-    const locations = {
-        'france-paris': 'France (Paris)',
-        'france-nice': 'France (Nice)',
-        'usa-washington': 'USA (Washington D.C.)'
-    };
-    return locations[locationCode] || locationCode;
-}
-
-// Toast notifications
-function showToast(message, type = 'info') {
-    // Remove existing toasts first
-    document.querySelectorAll('.toast').forEach(toast => toast.remove());
-    
-    const toastHtml = `
-        <div class="toast align-items-center text-bg-${type} border-0 position-fixed top-0 end-0 m-3" style="z-index: 10000;" role="alert">
-            <div class="d-flex">
-                <div class="toast-body">${message}</div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', toastHtml);
-    const toastElement = document.querySelector('.toast:last-child');
-    const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
-    toast.show();
-    
-    // Remove element after hiding
-    toastElement.addEventListener('hidden.bs.toast', () => {
-        toastElement.remove();
-    });
-}
-
-// Auto-focus on URL input when document is ready
-document.addEventListener('DOMContentLoaded', function() {
-    if (urlInput) {
-        urlInput.focus();
-    }
-});
-
-// Handle responsive charts
-window.addEventListener('resize', function() {
-    Object.values(charts).forEach(chart => {
-        if (chart && typeof chart.resize === 'function') {
-            chart.resize();
-        }
-    });
-});
-
-// Error handling
-window.addEventListener('error', (e) => {
-    console.error('Erreur JavaScript:', e.error);
-    showToast('Une erreur inattendue s\'est produite', 'danger');
-});
-
-window.addEventListener('unhandledrejection', (e) => {
-    console.error('Promise rejection:', e.reason);
-    showToast('Erreur lors du traitement', 'danger');
-});
-
-// Prevent form submission on Enter in select elements
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('select').forEach(select => {
-        select.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                analyzeWebsite();
-            }
-        });
-    });
-});
-
-// Check if Chart.js is loaded on startup
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof Chart === 'undefined') {
-        console.error('Chart.js n\'est pas chargé !');
-        showToast('Erreur: Chart.js non disponible', 'danger');
-    }
-});
-    </script>
-</body>
-</html>
+        // Generate result header
+        function generateResultHeader(data) {
+            return `
+                <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-3 fs-4"></i>
+                    <div>
+                        <h4 class="alert-heading mb-1">Analyse terminée</h4>
+                        <p class="mb-0">
+                            <strong>${data.url}</strong> | 
+                            ${data.responseTime}ms | 
+                            ${data.language.name} | 
+                            ${getLocationName(data.analysisOptions.location)}
